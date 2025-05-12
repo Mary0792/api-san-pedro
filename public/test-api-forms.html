@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios de Prueba API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .form-section h4 {
+            margin-bottom: 15px;
+            color: #0d6efd;
+        }
+        .response-container {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .response-success {
+            border-left: 5px solid #198754;
+        }
+        .response-error {
+            border-left: 5px solid #dc3545;
+        }
+        .btn-api {
+            margin-top: 10px;
+        }
+        .tab-content {
+            padding-top: 20px;
+        }
+        .api-url {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .method {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        .method-get {
+            background-color: #0dcaf0;
+            color: #000;
+        }
+        .method-post {
+            background-color: #198754;
+            color: #fff;
+        }
+        .method-put {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .method-delete {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Formularios de Prueba API</h1>
+
+        <ul class="nav nav-tabs" id="apiTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Inicio</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="estudiantes-tab" data-bs-toggle="tab" data-bs-target="#estudiantes" type="button" role="tab" aria-controls="estudiantes" aria-selected="false">Estudiantes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="apoderados-tab" data-bs-toggle="tab" data-bs-target="#apoderados" type="button" role="tab" aria-controls="apoderados" aria-selected="false">Apoderados</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="solicitudes-tab" data-bs-toggle="tab" data-bs-target="#solicitudes" type="button" role="tab" aria-controls="solicitudes" aria-selected="false">Solicitudes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="documentos-tab" data-bs-toggle="tab" data-bs-target="#documentos" type="button" role="tab" aria-controls="documentos" aria-selected="false">Documentos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="observaciones-tab" data-bs-toggle="tab" data-bs-target="#observaciones" type="button" role="tab" aria-controls="observaciones" aria-selected="false">Observaciones</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="años-tab" data-bs-toggle="tab" data-bs-target="#años" type="button" role="tab" aria-controls="años" aria-selected="false">Años Escolares</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="apiTabsContent">
+            <!-- Pestaña de Inicio -->
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Bienvenido a los Formularios de Prueba de la API</h3>
+                    <p>Esta página contiene formularios para probar todas las funcionalidades de la API de matrícula escolar.</p>
+                    <p>Selecciona una pestaña para comenzar a probar los diferentes endpoints.</p>
+
+                    <div class="form-section">
+                        <h4>Probar Conexión a la API</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/test
+                        </div>
+                        <button class="btn btn-primary" onclick="testApiConnection()">Probar Conexión</button>
+                        <div id="testResponse" class="response-container mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Estudiantes -->
+            <div class="tab-pane fade" id="estudiantes" role="tabpanel" aria-labelledby="estudiantes-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Gestión de Estudiantes</h3>
+
+                    <!-- Obtener Estudiantes -->
+                    <div class="form-section">
+                        <h4>Obtener Estudiantes</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/estudiantes
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getEstudiantes()">Obtener Todos</button>
+                        <div id="getEstudiantesResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Estudiante por ID -->
+                    <div class="form-section">
+                        <h4>Obtener Estudiante por ID</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/estudiantes/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="getEstudianteId" class="form-label">ID del Estudiante</label>
+                            <input type="number" class="form-control" id="getEstudianteId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getEstudianteById()">Obtener</button>
+                        <div id="getEstudianteByIdResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Crear Estudiante -->
+                    <div class="form-section">
+                        <h4>Crear Estudiante</h4>
+                        <div class="api-url">
+                            <span class="method method-post">POST</span> /api/estudiantes
+                        </div>
+                        <form id="createEstudianteForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="estudianteNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="estudianteNombre" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="estudianteDni" class="form-label">DNI</label>
+                                    <input type="text" class="form-control" id="estudianteDni" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="estudianteFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" id="estudianteFechaNacimiento" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="estudianteGenero" class="form-label">Género</label>
+                                    <select class="form-select" id="estudianteGenero" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="estudianteGrado" class="form-label">Grado Actual</label>
+                                    <input type="number" class="form-control" id="estudianteGrado" min="1" max="11" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="estudianteDireccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="estudianteDireccion" required>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success btn-api" onclick="createEstudiante()">Crear</button>
+                        </form>
+                        <div id="createEstudianteResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Actualizar Estudiante -->
+                    <div class="form-section">
+                        <h4>Actualizar Estudiante</h4>
+                        <div class="api-url">
+                            <span class="method method-put">PUT</span> /api/estudiantes/:id
+                        </div>
+                        <form id="updateEstudianteForm">
+                            <div class="mb-3">
+                                <label for="updateEstudianteId" class="form-label">ID del Estudiante</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="updateEstudianteId" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="buscarEstudiante()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="updateEstudianteNombre">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteDni" class="form-label">DNI</label>
+                                    <input type="text" class="form-control" id="updateEstudianteDni">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                    <input type="date" class="form-control" id="updateEstudianteFechaNacimiento">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteGenero" class="form-label">Género</label>
+                                    <select class="form-select" id="updateEstudianteGenero">
+                                        <option value="">Seleccione...</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteGrado" class="form-label">Grado Actual</label>
+                                    <input type="number" class="form-control" id="updateEstudianteGrado" min="1" max="11">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteSeccion" class="form-label">Sección</label>
+                                    <input type="text" class="form-control" id="updateEstudianteSeccion">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteTelefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="updateEstudianteTelefono">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateEstudianteEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="updateEstudianteEmail">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="updateEstudianteDireccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="updateEstudianteDireccion">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-warning btn-api" onclick="updateEstudiante()">Actualizar</button>
+                        </form>
+                        <div id="updateEstudianteResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Eliminar Estudiante -->
+                    <div class="form-section">
+                        <h4>Eliminar Estudiante</h4>
+                        <div class="api-url">
+                            <span class="method method-delete">DELETE</span> /api/estudiantes/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="deleteEstudianteId" class="form-label">ID del Estudiante</label>
+                            <input type="number" class="form-control" id="deleteEstudianteId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-danger btn-api" onclick="deleteEstudiante()">Eliminar</button>
+                        <div id="deleteEstudianteResponse" class="response-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Apoderados -->
+            <div class="tab-pane fade" id="apoderados" role="tabpanel" aria-labelledby="apoderados-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Gestión de Apoderados</h3>
+
+                    <!-- Obtener Apoderados -->
+                    <div class="form-section">
+                        <h4>Obtener Apoderados</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/apoderados
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getApoderados()">Obtener Todos</button>
+                        <div id="getApoderadosResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Apoderado por ID -->
+                    <div class="form-section">
+                        <h4>Obtener Apoderado por ID</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/apoderados/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="getApoderadoId" class="form-label">ID del Apoderado</label>
+                            <input type="number" class="form-control" id="getApoderadoId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getApoderadoById()">Obtener</button>
+                        <div id="getApoderadoByIdResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Crear Apoderado -->
+                    <div class="form-section">
+                        <h4>Crear Apoderado</h4>
+                        <div class="api-url">
+                            <span class="method method-post">POST</span> /api/apoderados
+                        </div>
+                        <form id="createApoderadoForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="apoderadoNombre" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoDni" class="form-label">DNI</label>
+                                    <input type="text" class="form-control" id="apoderadoDni" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoParentesco" class="form-label">Parentesco</label>
+                                    <select class="form-select" id="apoderadoParentesco" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="padre">Padre</option>
+                                        <option value="madre">Madre</option>
+                                        <option value="abuelo">Abuelo/a</option>
+                                        <option value="tio">Tío/a</option>
+                                        <option value="hermano">Hermano/a</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoOcupacion" class="form-label">Ocupación</label>
+                                    <input type="text" class="form-control" id="apoderadoOcupacion" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoGradoInstruccion" class="form-label">Grado de Instrucción</label>
+                                    <select class="form-select" id="apoderadoGradoInstruccion" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="primaria">Primaria</option>
+                                        <option value="secundaria">Secundaria</option>
+                                        <option value="tecnico">Técnico</option>
+                                        <option value="superior">Superior</option>
+                                        <option value="postgrado">Postgrado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoTelefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="apoderadoTelefono" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="apoderadoEmail">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="apoderadoDireccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="apoderadoDireccion" required>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success btn-api" onclick="createApoderado()">Crear</button>
+                        </form>
+                        <div id="createApoderadoResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Actualizar Apoderado -->
+                    <div class="form-section">
+                        <h4>Actualizar Apoderado</h4>
+                        <div class="api-url">
+                            <span class="method method-put">PUT</span> /api/apoderados/:id
+                        </div>
+                        <form id="updateApoderadoForm">
+                            <div class="mb-3">
+                                <label for="updateApoderadoId" class="form-label">ID del Apoderado</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="updateApoderadoId" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="buscarApoderado()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="updateApoderadoNombre">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoDni" class="form-label">DNI</label>
+                                    <input type="text" class="form-control" id="updateApoderadoDni">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoParentesco" class="form-label">Parentesco</label>
+                                    <select class="form-select" id="updateApoderadoParentesco">
+                                        <option value="">Seleccione...</option>
+                                        <option value="padre">Padre</option>
+                                        <option value="madre">Madre</option>
+                                        <option value="abuelo">Abuelo/a</option>
+                                        <option value="tio">Tío/a</option>
+                                        <option value="hermano">Hermano/a</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoOcupacion" class="form-label">Ocupación</label>
+                                    <input type="text" class="form-control" id="updateApoderadoOcupacion">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoGradoInstruccion" class="form-label">Grado de Instrucción</label>
+                                    <select class="form-select" id="updateApoderadoGradoInstruccion">
+                                        <option value="">Seleccione...</option>
+                                        <option value="primaria">Primaria</option>
+                                        <option value="secundaria">Secundaria</option>
+                                        <option value="tecnico">Técnico</option>
+                                        <option value="superior">Superior</option>
+                                        <option value="postgrado">Postgrado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoTelefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="updateApoderadoTelefono">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="updateApoderadoEmail">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateApoderadoDireccion" class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="updateApoderadoDireccion">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-warning btn-api" onclick="updateApoderado()">Actualizar</button>
+                        </form>
+                        <div id="updateApoderadoResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Eliminar Apoderado -->
+                    <div class="form-section">
+                        <h4>Eliminar Apoderado</h4>
+                        <div class="api-url">
+                            <span class="method method-delete">DELETE</span> /api/apoderados/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="deleteApoderadoId" class="form-label">ID del Apoderado</label>
+                            <input type="number" class="form-control" id="deleteApoderadoId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-danger btn-api" onclick="deleteApoderado()">Eliminar</button>
+                        <div id="deleteApoderadoResponse" class="response-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Solicitudes -->
+            <div class="tab-pane fade" id="solicitudes" role="tabpanel" aria-labelledby="solicitudes-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Gestión de Solicitudes</h3>
+
+                    <ul class="nav nav-pills mb-4" id="solicitudesTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="nueva-tab" data-bs-toggle="pill" data-bs-target="#nueva" type="button" role="tab" aria-controls="nueva" aria-selected="true">Matrícula Nueva</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="traslado-tab" data-bs-toggle="pill" data-bs-target="#traslado" type="button" role="tab" aria-controls="traslado" aria-selected="false">Traslado</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="siguiente-tab" data-bs-toggle="pill" data-bs-target="#siguiente" type="button" role="tab" aria-controls="siguiente" aria-selected="false">Siguiente Grado</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="solicitudesTabsContent">
+                        <!-- Solicitud Matrícula Nueva -->
+                        <div class="tab-pane fade show active" id="nueva" role="tabpanel" aria-labelledby="nueva-tab">
+                            <!-- Obtener Solicitudes de Matrícula Nueva -->
+                            <div class="form-section">
+                                <h4>Obtener Solicitudes de Matrícula Nueva</h4>
+                                <div class="api-url">
+                                    <span class="method method-get">GET</span> /api/solicitudes/nueva
+                                </div>
+                                <button class="btn btn-info btn-api" onclick="getSolicitudesNueva()">Obtener Todas</button>
+                                <div id="getSolicitudesNuevaResponse" class="response-container"></div>
+                            </div>
+
+                            <!-- Obtener Solicitud de Matrícula Nueva por ID -->
+                            <div class="form-section">
+                                <h4>Obtener Solicitud por ID</h4>
+                                <div class="api-url">
+                                    <span class="method method-get">GET</span> /api/solicitudes/nueva/:id
+                                </div>
+                                <div class="mb-3">
+                                    <label for="getSolicitudNuevaId" class="form-label">ID de la Solicitud</label>
+                                    <input type="number" class="form-control" id="getSolicitudNuevaId" placeholder="Ingrese ID">
+                                </div>
+                                <button class="btn btn-info btn-api" onclick="getSolicitudNuevaById()">Obtener</button>
+                                <div id="getSolicitudNuevaByIdResponse" class="response-container"></div>
+                            </div>
+
+                            <!-- Crear Solicitud de Matrícula Nueva -->
+                            <div class="form-section">
+                                <h4>Crear Solicitud de Matrícula Nueva</h4>
+                                <div class="api-url">
+                                    <span class="method method-post">POST</span> /api/solicitudes/nueva
+                                </div>
+                                <form id="createSolicitudNuevaForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaNombreEstudiante" class="form-label">Nombre del Estudiante</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaNombreEstudiante" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaDniEstudiante" class="form-label">DNI del Estudiante</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaDniEstudiante" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                            <input type="date" class="form-control" id="solicitudNuevaFechaNacimiento" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaGenero" class="form-label">Género</label>
+                                            <select class="form-select" id="solicitudNuevaGenero" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="masculino">Masculino</option>
+                                                <option value="femenino">Femenino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaGradoSolicitado" class="form-label">Grado Solicitado</label>
+                                            <input type="number" class="form-control" id="solicitudNuevaGradoSolicitado" min="1" max="11" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaDireccion" class="form-label">Dirección</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaDireccion" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaNombreApoderado" class="form-label">Nombre del Apoderado</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaNombreApoderado" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaDniApoderado" class="form-label">DNI del Apoderado</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaDniApoderado" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaParentesco" class="form-label">Parentesco</label>
+                                            <select class="form-select" id="solicitudNuevaParentesco" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="padre">Padre</option>
+                                                <option value="madre">Madre</option>
+                                                <option value="abuelo">Abuelo/a</option>
+                                                <option value="tio">Tío/a</option>
+                                                <option value="hermano">Hermano/a</option>
+                                                <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaOcupacion" class="form-label">Ocupación</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaOcupacion" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaGradoInstruccion" class="form-label">Grado de Instrucción</label>
+                                            <select class="form-select" id="solicitudNuevaGradoInstruccion" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="primaria">Primaria</option>
+                                                <option value="secundaria">Secundaria</option>
+                                                <option value="tecnico">Técnico</option>
+                                                <option value="superior">Superior</option>
+                                                <option value="postgrado">Postgrado</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaTelefono" class="form-label">Teléfono</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaTelefono" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="solicitudNuevaEmail">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaDireccionApoderado" class="form-label">Dirección del Apoderado</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaDireccionApoderado" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaAñoEscolar" class="form-label">Año Escolar</label>
+                                            <input type="text" class="form-control" id="solicitudNuevaAñoEscolar" pattern="\\d{4}" placeholder="YYYY" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="solicitudNuevaFechaSolicitud" class="form-label">Fecha de Solicitud</label>
+                                            <input type="date" class="form-control" id="solicitudNuevaFechaSolicitud" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="solicitudNuevaComentarios" class="form-label">Comentarios</label>
+                                        <textarea class="form-control" id="solicitudNuevaComentarios" rows="3"></textarea>
+                                    </div>
+                                    <button type="button" class="btn btn-success btn-api" onclick="createSolicitudNueva()">Crear</button>
+                                </form>
+                                <div id="createSolicitudNuevaResponse" class="response-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- Solicitud Traslado -->
+                        <div class="tab-pane fade" id="traslado" role="tabpanel" aria-labelledby="traslado-tab">
+                            <!-- Obtener Solicitudes de Traslado -->
+                            <div class="form-section">
+                                <h4>Obtener Solicitudes de Traslado</h4>
+                                <div class="api-url">
+                                    <span class="method method-get">GET</span> /api/solicitudes/traslado
+                                </div>
+                                <button class="btn btn-info btn-api" onclick="getSolicitudesTraslado()">Obtener Todas</button>
+                                <div id="getSolicitudesTrasladoResponse" class="response-container"></div>
+                            </div>
+
+                            <!-- Obtener Solicitud de Traslado por ID -->
+                            <div class="form-section">
+                                <h4>Obtener Solicitud por ID</h4>
+                                <div class="api-url">
+                                    <span class="method method-get">GET</span> /api/solicitudes/traslado/:id
+                                </div>
+                                <div class="mb-3">
+                                    <label for="getSolicitudTrasladoId" class="form-label">ID de la Solicitud</label>
+                                    <input type="number" class="form-control" id="getSolicitudTrasladoId" placeholder="Ingrese ID">
+                                </div>
+                                <button class="btn btn-info btn-api" onclick="getSolicitudTrasladoById()">Obtener</button>
+                                <div id="getSolicitudTrasladoByIdResponse" class="response-container"></div>
+                            </div>
+                        </div>
+
+                        <!-- Solicitud Siguiente Grado -->
+                        <div class="tab-pane fade" id="siguiente" role="tabpanel" aria-labelledby="siguiente-tab">
+                            <!-- Obtener Solicitudes de Siguiente Grado -->
+                            <div class="form-section">
+                                <h4>Obtener Solicitudes de Siguiente Grado</h4>
+                                <div class="api-url">
+                                    <span class="method method-get">GET</span> /api/solicitudes/siguiente
+                                </div>
+                                <button class="btn btn-info btn-api" onclick="getSolicitudesSiguiente()">Obtener Todas</button>
+                                <div id="getSolicitudesSiguienteResponse" class="response-container"></div>
+                            </div>
+
+                            <!-- Obtener Solicitud de Siguiente Grado por ID -->
+                            <div class="form-section">
+                                <h4>Obtener Solicitud por ID</h4>
+                                <div class="api-url">
+                                    <span class="method method-get">GET</span> /api/solicitudes/siguiente/:id
+                                </div>
+                                <div class="mb-3">
+                                    <label for="getSolicitudSiguienteId" class="form-label">ID de la Solicitud</label>
+                                    <input type="number" class="form-control" id="getSolicitudSiguienteId" placeholder="Ingrese ID">
+                                </div>
+                                <button class="btn btn-info btn-api" onclick="getSolicitudSiguienteById()">Obtener</button>
+                                <div id="getSolicitudSiguienteByIdResponse" class="response-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Documentos -->
+            <div class="tab-pane fade" id="documentos" role="tabpanel" aria-labelledby="documentos-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Gestión de Documentos</h3>
+
+                    <!-- Obtener Documentos -->
+                    <div class="form-section">
+                        <h4>Obtener Documentos</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/documentos
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getDocumentos()">Obtener Todos</button>
+                        <div id="getDocumentosResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Documento por ID -->
+                    <div class="form-section">
+                        <h4>Obtener Documento por ID</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/documentos/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="getDocumentoId" class="form-label">ID del Documento</label>
+                            <input type="number" class="form-control" id="getDocumentoId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getDocumentoById()">Obtener</button>
+                        <div id="getDocumentoByIdResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Documentos por Solicitud -->
+                    <div class="form-section">
+                        <h4>Obtener Documentos por Solicitud</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/solicitudes/:tipoSolicitud/:solicitudId/documentos
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="getDocumentosTipoSolicitud" class="form-label">Tipo de Solicitud</label>
+                                <select class="form-select" id="getDocumentosTipoSolicitud" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="nueva">Matrícula Nueva</option>
+                                    <option value="traslado">Traslado</option>
+                                    <option value="siguiente">Siguiente Grado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="getDocumentosSolicitudId" class="form-label">ID de la Solicitud</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="getDocumentosSolicitudId" placeholder="Ingrese ID">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="buscarSolicitudes()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getDocumentosBySolicitud()">Obtener</button>
+                        <div id="getDocumentosBySolicitudResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Subir Documento -->
+                    <div class="form-section">
+                        <h4>Subir Documento</h4>
+                        <div class="api-url">
+                            <span class="method method-post">POST</span> /api/documentos
+                        </div>
+                        <form id="uploadDocumentoForm" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="documentoTipoSolicitud" class="form-label">Tipo de Solicitud</label>
+                                    <select class="form-select" id="documentoTipoSolicitud" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="nueva">Matrícula Nueva</option>
+                                        <option value="traslado">Traslado</option>
+                                        <option value="siguiente">Siguiente Grado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="documentoSolicitudId" class="form-label">ID de la Solicitud</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="documentoSolicitudId" required>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="buscarSolicitudesParaDocumento()">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="documentoTipo" class="form-label">Tipo de Documento</label>
+                                <select class="form-select" id="documentoTipo" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="DNI">DNI</option>
+                                    <option value="CERTIFICADO_NACIMIENTO">Certificado de Nacimiento</option>
+                                    <option value="CERTIFICADO_ESTUDIOS">Certificado de Estudios</option>
+                                    <option value="FOTOS">Fotos</option>
+                                    <option value="CONSTANCIA_TRASLADO">Constancia de Traslado</option>
+                                    <option value="CERTIFICADO_CONDUCTA">Certificado de Conducta</option>
+                                    <option value="LIBRETA">Libreta</option>
+                                    <option value="APAFA">APAFA</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="documentoArchivo" class="form-label">Archivo</label>
+                                <input type="file" class="form-control" id="documentoArchivo" required>
+                            </div>
+                            <button type="button" class="btn btn-success btn-api" onclick="uploadDocumento()">Subir</button>
+                        </form>
+                        <div id="uploadDocumentoResponse" class="response-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Observaciones -->
+            <div class="tab-pane fade" id="observaciones" role="tabpanel" aria-labelledby="observaciones-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Gestión de Observaciones</h3>
+
+                    <!-- Obtener Observaciones -->
+                    <div class="form-section">
+                        <h4>Obtener Observaciones</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/observaciones
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getObservaciones()">Obtener Todas</button>
+                        <div id="getObservacionesResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Observación por ID -->
+                    <div class="form-section">
+                        <h4>Obtener Observación por ID</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/observaciones/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="getObservacionId" class="form-label">ID de la Observación</label>
+                            <input type="number" class="form-control" id="getObservacionId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getObservacionById()">Obtener</button>
+                        <div id="getObservacionByIdResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Observaciones por Solicitud -->
+                    <div class="form-section">
+                        <h4>Obtener Observaciones por Solicitud</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/solicitudes/:tipoSolicitud/:solicitudId/observaciones
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="getObservacionesTipoSolicitud" class="form-label">Tipo de Solicitud</label>
+                                <select class="form-select" id="getObservacionesTipoSolicitud" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="nueva">Matrícula Nueva</option>
+                                    <option value="traslado">Traslado</option>
+                                    <option value="siguiente">Siguiente Grado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="getObservacionesSolicitudId" class="form-label">ID de la Solicitud</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="getObservacionesSolicitudId" placeholder="Ingrese ID">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="buscarSolicitudesParaObservaciones()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getObservacionesBySolicitud()">Obtener</button>
+                        <div id="getObservacionesBySolicitudResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Crear Observación -->
+                    <div class="form-section">
+                        <h4>Crear Observación</h4>
+                        <div class="api-url">
+                            <span class="method method-post">POST</span> /api/observaciones
+                        </div>
+                        <form id="createObservacionForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="observacionTipoSolicitud" class="form-label">Tipo de Solicitud</label>
+                                    <select class="form-select" id="observacionTipoSolicitud" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="nueva">Matrícula Nueva</option>
+                                        <option value="traslado">Traslado</option>
+                                        <option value="siguiente">Siguiente Grado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="observacionSolicitudId" class="form-label">ID de la Solicitud</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="observacionSolicitudId" required>
+                                        <button class="btn btn-outline-secondary" type="button" onclick="buscarSolicitudesParaCrearObservacion()">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="observacionTipo" class="form-label">Tipo de Observación</label>
+                                    <select class="form-select" id="observacionTipo" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="comentario">Comentario</option>
+                                        <option value="rechazo">Rechazo</option>
+                                        <option value="aprobación">Aprobación</option>
+                                        <option value="petición_documentos">Petición de Documentos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="observacionVisiblePadres" class="form-label">Visible para Padres</label>
+                                    <select class="form-select" id="observacionVisiblePadres" required>
+                                        <option value="1" selected>Sí</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="observacionDescripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="observacionDescripcion" rows="3" required></textarea>
+                            </div>
+                            <button type="button" class="btn btn-success btn-api" onclick="createObservacion()">Crear</button>
+                        </form>
+                        <div id="createObservacionResponse" class="response-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Años Escolares -->
+            <div class="tab-pane fade" id="años" role="tabpanel" aria-labelledby="años-tab">
+                <div class="form-container">
+                    <h3 class="mb-4">Gestión de Años Escolares</h3>
+
+                    <!-- Obtener Años Escolares -->
+                    <div class="form-section">
+                        <h4>Obtener Años Escolares</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/anios-escolares
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getAñosEscolares()">Obtener Todos</button>
+                        <div id="getAñosEscolaresResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Año Escolar por ID -->
+                    <div class="form-section">
+                        <h4>Obtener Año Escolar por ID</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/anios-escolares/:id
+                        </div>
+                        <div class="mb-3">
+                            <label for="getAñoEscolarId" class="form-label">ID del Año Escolar</label>
+                            <input type="number" class="form-control" id="getAñoEscolarId" placeholder="Ingrese ID">
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getAñoEscolarById()">Obtener</button>
+                        <div id="getAñoEscolarByIdResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Obtener Año Escolar Activo -->
+                    <div class="form-section">
+                        <h4>Obtener Año Escolar Activo</h4>
+                        <div class="api-url">
+                            <span class="method method-get">GET</span> /api/anios-escolares/activo
+                        </div>
+                        <button class="btn btn-info btn-api" onclick="getAñoEscolarActivo()">Obtener Activo</button>
+                        <div id="getAñoEscolarActivoResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Crear Año Escolar -->
+                    <div class="form-section">
+                        <h4>Crear Año Escolar</h4>
+                        <div class="api-url">
+                            <span class="method method-post">POST</span> /api/anios-escolares
+                        </div>
+                        <form id="createAñoEscolarForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="añoEscolarAño" class="form-label">Año</label>
+                                    <input type="text" class="form-control" id="añoEscolarAño" pattern="\\d{4}" placeholder="YYYY" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="añoEscolarDescripcion" class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" id="añoEscolarDescripcion" placeholder="Ej: Año Escolar 2024">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="añoEscolarFechaInicio" class="form-label">Fecha de Inicio</label>
+                                    <input type="date" class="form-control" id="añoEscolarFechaInicio" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="añoEscolarFechaFin" class="form-label">Fecha de Fin</label>
+                                    <input type="date" class="form-control" id="añoEscolarFechaFin" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="añoEscolarEstado" class="form-label">Estado</label>
+                                <select class="form-select" id="añoEscolarEstado" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="planificado">Planificado</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="finalizado">Finalizado</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-success btn-api" onclick="createAñoEscolar()">Crear</button>
+                        </form>
+                        <div id="createAñoEscolarResponse" class="response-container"></div>
+                    </div>
+
+                    <!-- Actualizar Año Escolar -->
+                    <div class="form-section">
+                        <h4>Actualizar Año Escolar</h4>
+                        <div class="api-url">
+                            <span class="method method-put">PUT</span> /api/anios-escolares/:id
+                        </div>
+                        <form id="updateAñoEscolarForm">
+                            <div class="mb-3">
+                                <label for="updateAñoEscolarId" class="form-label">ID del Año Escolar</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="updateAñoEscolarId" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="buscarAñoEscolar()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateAñoEscolarAño" class="form-label">Año</label>
+                                    <input type="text" class="form-control" id="updateAñoEscolarAño" pattern="\\d{4}" placeholder="YYYY">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateAñoEscolarDescripcion" class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" id="updateAñoEscolarDescripcion">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateAñoEscolarFechaInicio" class="form-label">Fecha de Inicio</label>
+                                    <input type="date" class="form-control" id="updateAñoEscolarFechaInicio">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="updateAñoEscolarFechaFin" class="form-label">Fecha de Fin</label>
+                                    <input type="date" class="form-control" id="updateAñoEscolarFechaFin">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="updateAñoEscolarEstado" class="form-label">Estado</label>
+                                <select class="form-select" id="updateAñoEscolarEstado">
+                                    <option value="">Seleccione...</option>
+                                    <option value="planificado">Planificado</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="finalizado">Finalizado</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-warning btn-api" onclick="updateAñoEscolar()">Actualizar</button>
+                        </form>
+                        <div id="updateAñoEscolarResponse" class="response-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // Función para mostrar respuestas
+        function displayResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.className = `response-container ${isError ? 'response-error' : 'response-success'}`;
+            element.textContent = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+        }
+
+        // Función para realizar peticiones a la API
+        async function fetchAPI(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                if (body && method !== 'GET') {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(`${API_URL}${endpoint}`, options);
+                const data = await response.json();
+
+                return {
+                    ok: response.ok,
+                    status: response.status,
+                    data
+                };
+            } catch (error) {
+                return {
+                    ok: false,
+                    status: 500,
+                    data: { message: error.message }
+                };
+            }
+        }
+
+        // Funciones para la pestaña de Inicio
+        async function testApiConnection() {
+            const response = await fetchAPI('/test');
+            displayResponse('testResponse', response.data, !response.ok);
+        }
+
+        // Funciones para la pestaña de Estudiantes
+        async function getEstudiantes() {
+            const response = await fetchAPI('/estudiantes');
+            displayResponse('getEstudiantesResponse', response.data, !response.ok);
+        }
+
+        async function getEstudianteById() {
+            const id = document.getElementById('getEstudianteId').value;
+            if (!id) {
+                displayResponse('getEstudianteByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/estudiantes/${id}`);
+            displayResponse('getEstudianteByIdResponse', response.data, !response.ok);
+        }
+
+        async function createEstudiante() {
+            const estudiante = {
+                nombre: document.getElementById('estudianteNombre').value,
+                dni: document.getElementById('estudianteDni').value,
+                fecha_nacimiento: document.getElementById('estudianteFechaNacimiento').value,
+                genero: document.getElementById('estudianteGenero').value,
+                grado_actual: parseInt(document.getElementById('estudianteGrado').value),
+                direccion: document.getElementById('estudianteDireccion').value
+            };
+
+            const response = await fetchAPI('/estudiantes', 'POST', estudiante);
+            displayResponse('createEstudianteResponse', response.data, !response.ok);
+
+            if (response.ok) {
+                document.getElementById('createEstudianteForm').reset();
+            }
+        }
+
+        async function updateEstudiante() {
+            const id = document.getElementById('updateEstudianteId').value;
+            if (!id) {
+                displayResponse('updateEstudianteResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            try {
+                const estudiante = {};
+
+                // Función auxiliar para obtener el valor de un elemento de forma segura
+                function getElementValue(elementId) {
+                    const element = document.getElementById(elementId);
+                    return element ? element.value : null;
+                }
+
+                // Obtener valores de los campos
+                const nombre = getElementValue('updateEstudianteNombre');
+                if (nombre) estudiante.nombre = nombre;
+
+                const dni = getElementValue('updateEstudianteDni');
+                if (dni) estudiante.dni = dni;
+
+                const fechaNacimiento = getElementValue('updateEstudianteFechaNacimiento');
+                if (fechaNacimiento) estudiante.fecha_nacimiento = fechaNacimiento;
+
+                const genero = getElementValue('updateEstudianteGenero');
+                if (genero) estudiante.genero = genero;
+
+                const grado = getElementValue('updateEstudianteGrado');
+                if (grado) {
+                    // Asegurarse de que el grado sea un número
+                    const gradoNum = parseInt(grado);
+                    if (!isNaN(gradoNum)) {
+                        estudiante.grado_actual = gradoNum;
+                        console.log('Grado enviado:', estudiante.grado_actual); // Log para verificar
+                    } else {
+                        console.error('El grado no es un número válido:', grado);
+                    }
+                }
+
+                const seccion = getElementValue('updateEstudianteSeccion');
+                if (seccion) estudiante.seccion = seccion;
+
+                const telefono = getElementValue('updateEstudianteTelefono');
+                if (telefono) estudiante.telefono = telefono;
+
+                const email = getElementValue('updateEstudianteEmail');
+                if (email) estudiante.email = email;
+
+                const direccion = getElementValue('updateEstudianteDireccion');
+                if (direccion) estudiante.direccion = direccion;
+
+                console.log('Datos a enviar:', estudiante); // Log para verificar
+
+                const response = await fetchAPI(`/estudiantes/${id}`, 'PUT', estudiante);
+                displayResponse('updateEstudianteResponse', response.data, !response.ok);
+
+                if (response.ok) {
+                    console.log('Estudiante actualizado correctamente');
+                }
+            } catch (error) {
+                console.error('Error al actualizar estudiante:', error);
+                displayResponse('updateEstudianteResponse', { message: `Error: ${error.message}` }, true);
+            }
+        }
+
+        async function deleteEstudiante() {
+            const id = document.getElementById('deleteEstudianteId').value;
+            if (!id) {
+                displayResponse('deleteEstudianteResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            if (!confirm(`¿Está seguro de eliminar el estudiante con ID ${id}?`)) {
+                return;
+            }
+
+            const response = await fetchAPI(`/estudiantes/${id}`, 'DELETE');
+            displayResponse('deleteEstudianteResponse', response.data, !response.ok);
+        }
+
+        // Funciones para la pestaña de Apoderados
+        async function getApoderados() {
+            const response = await fetchAPI('/apoderados');
+            displayResponse('getApoderadosResponse', response.data, !response.ok);
+        }
+
+        async function getApoderadoById() {
+            const id = document.getElementById('getApoderadoId').value;
+            if (!id) {
+                displayResponse('getApoderadoByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/apoderados/${id}`);
+            displayResponse('getApoderadoByIdResponse', response.data, !response.ok);
+        }
+
+        async function createApoderado() {
+            const apoderado = {
+                nombre: document.getElementById('apoderadoNombre').value,
+                dni: document.getElementById('apoderadoDni').value,
+                parentesco: document.getElementById('apoderadoParentesco').value,
+                ocupacion: document.getElementById('apoderadoOcupacion').value,
+                grado_instruccion: document.getElementById('apoderadoGradoInstruccion').value,
+                telefono: document.getElementById('apoderadoTelefono').value,
+                email: document.getElementById('apoderadoEmail').value || null,
+                direccion: document.getElementById('apoderadoDireccion').value
+            };
+
+            const response = await fetchAPI('/apoderados', 'POST', apoderado);
+            displayResponse('createApoderadoResponse', response.data, !response.ok);
+
+            if (response.ok) {
+                document.getElementById('createApoderadoForm').reset();
+            }
+        }
+
+        async function updateApoderado() {
+            const id = document.getElementById('updateApoderadoId').value;
+            if (!id) {
+                displayResponse('updateApoderadoResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const apoderado = {};
+
+            const nombre = document.getElementById('updateApoderadoNombre').value;
+            if (nombre) apoderado.nombre = nombre;
+
+            const dni = document.getElementById('updateApoderadoDni').value;
+            if (dni) apoderado.dni = dni;
+
+            const parentesco = document.getElementById('updateApoderadoParentesco').value;
+            if (parentesco) apoderado.parentesco = parentesco;
+
+            const ocupacion = document.getElementById('updateApoderadoOcupacion').value;
+            if (ocupacion) apoderado.ocupacion = ocupacion;
+
+            const gradoInstruccion = document.getElementById('updateApoderadoGradoInstruccion').value;
+            if (gradoInstruccion) apoderado.grado_instruccion = gradoInstruccion;
+
+            const telefono = document.getElementById('updateApoderadoTelefono').value;
+            if (telefono) apoderado.telefono = telefono;
+
+            const email = document.getElementById('updateApoderadoEmail').value;
+            if (email) apoderado.email = email;
+
+            const direccion = document.getElementById('updateApoderadoDireccion').value;
+            if (direccion) apoderado.direccion = direccion;
+
+            const response = await fetchAPI(`/apoderados/${id}`, 'PUT', apoderado);
+            displayResponse('updateApoderadoResponse', response.data, !response.ok);
+        }
+
+        async function deleteApoderado() {
+            const id = document.getElementById('deleteApoderadoId').value;
+            if (!id) {
+                displayResponse('deleteApoderadoResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            if (!confirm(`¿Está seguro de eliminar el apoderado con ID ${id}?`)) {
+                return;
+            }
+
+            const response = await fetchAPI(`/apoderados/${id}`, 'DELETE');
+            displayResponse('deleteApoderadoResponse', response.data, !response.ok);
+        }
+
+        // Funciones para la pestaña de Solicitudes
+        async function getSolicitudesNueva() {
+            const response = await fetchAPI('/solicitudes/nueva');
+            displayResponse('getSolicitudesNuevaResponse', response.data, !response.ok);
+        }
+
+        async function getSolicitudNuevaById() {
+            const id = document.getElementById('getSolicitudNuevaId').value;
+            if (!id) {
+                displayResponse('getSolicitudNuevaByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/nueva/${id}`);
+            displayResponse('getSolicitudNuevaByIdResponse', response.data, !response.ok);
+        }
+
+        async function createSolicitudNueva() {
+            const solicitud = {
+                nombre_estudiante: document.getElementById('solicitudNuevaNombreEstudiante').value,
+                dni_estudiante: document.getElementById('solicitudNuevaDniEstudiante').value,
+                fecha_nacimiento: document.getElementById('solicitudNuevaFechaNacimiento').value,
+                genero: document.getElementById('solicitudNuevaGenero').value,
+                grado_solicitado: parseInt(document.getElementById('solicitudNuevaGradoSolicitado').value),
+                direccion: document.getElementById('solicitudNuevaDireccion').value,
+                nombre_apoderado: document.getElementById('solicitudNuevaNombreApoderado').value,
+                dni_apoderado: document.getElementById('solicitudNuevaDniApoderado').value,
+                parentesco: document.getElementById('solicitudNuevaParentesco').value,
+                ocupacion: document.getElementById('solicitudNuevaOcupacion').value,
+                grado_instruccion: document.getElementById('solicitudNuevaGradoInstruccion').value,
+                telefono: document.getElementById('solicitudNuevaTelefono').value,
+                email: document.getElementById('solicitudNuevaEmail').value || null,
+                direccion_apoderado: document.getElementById('solicitudNuevaDireccionApoderado').value,
+                año_escolar: document.getElementById('solicitudNuevaAñoEscolar').value,
+                fecha_solicitud: document.getElementById('solicitudNuevaFechaSolicitud').value,
+                comentarios: document.getElementById('solicitudNuevaComentarios').value || null
+            };
+
+            const response = await fetchAPI('/solicitudes/nueva', 'POST', solicitud);
+            displayResponse('createSolicitudNuevaResponse', response.data, !response.ok);
+
+            if (response.ok) {
+                document.getElementById('createSolicitudNuevaForm').reset();
+            }
+        }
+
+        async function getSolicitudesTraslado() {
+            const response = await fetchAPI('/solicitudes/traslado');
+            displayResponse('getSolicitudesTrasladoResponse', response.data, !response.ok);
+        }
+
+        async function getSolicitudTrasladoById() {
+            const id = document.getElementById('getSolicitudTrasladoId').value;
+            if (!id) {
+                displayResponse('getSolicitudTrasladoByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/traslado/${id}`);
+            displayResponse('getSolicitudTrasladoByIdResponse', response.data, !response.ok);
+        }
+
+        async function getSolicitudesSiguiente() {
+            const response = await fetchAPI('/solicitudes/siguiente');
+            displayResponse('getSolicitudesSiguienteResponse', response.data, !response.ok);
+        }
+
+        async function getSolicitudSiguienteById() {
+            const id = document.getElementById('getSolicitudSiguienteId').value;
+            if (!id) {
+                displayResponse('getSolicitudSiguienteByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/siguiente/${id}`);
+            displayResponse('getSolicitudSiguienteByIdResponse', response.data, !response.ok);
+        }
+
+        // Funciones para la pestaña de Documentos
+        async function getDocumentos() {
+            const response = await fetchAPI('/documentos');
+            displayResponse('getDocumentosResponse', response.data, !response.ok);
+        }
+
+        async function getDocumentoById() {
+            const id = document.getElementById('getDocumentoId').value;
+            if (!id) {
+                displayResponse('getDocumentoByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/documentos/${id}`);
+            displayResponse('getDocumentoByIdResponse', response.data, !response.ok);
+        }
+
+        async function getDocumentosBySolicitud() {
+            const tipoSolicitud = document.getElementById('getDocumentosTipoSolicitud').value;
+            const solicitudId = document.getElementById('getDocumentosSolicitudId').value;
+
+            if (!tipoSolicitud || !solicitudId) {
+                displayResponse('getDocumentosBySolicitudResponse', { message: 'Por favor, seleccione el tipo de solicitud e ingrese el ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/${tipoSolicitud}/${solicitudId}/documentos`);
+            displayResponse('getDocumentosBySolicitudResponse', response.data, !response.ok);
+        }
+
+        async function uploadDocumento() {
+            const tipoSolicitud = document.getElementById('documentoTipoSolicitud').value;
+            const solicitudId = document.getElementById('documentoSolicitudId').value;
+            const tipoDocumento = document.getElementById('documentoTipo').value;
+            const archivo = document.getElementById('documentoArchivo').files[0];
+
+            if (!tipoSolicitud || !solicitudId || !tipoDocumento || !archivo) {
+                displayResponse('uploadDocumentoResponse', { message: 'Todos los campos son requeridos' }, true);
+                return;
+            }
+
+            // Crear FormData para enviar el archivo
+            const formData = new FormData();
+            formData.append('tipo_solicitud', tipoSolicitud);
+            formData.append('solicitud_id', solicitudId);
+            formData.append('tipo_documento', tipoDocumento);
+            // El nombre del campo debe coincidir con el que espera el middleware multer
+            formData.append('documento', archivo);
+
+            try {
+                displayResponse('uploadDocumentoResponse', { message: 'Subiendo documento...' }, false);
+
+                const response = await fetch(`${API_URL}/documentos`, {
+                    method: 'POST',
+                    body: formData,
+                    // No incluir Content-Type header, el navegador lo establecerá automáticamente con el boundary correcto
+                });
+
+                let data;
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    // Si no se puede parsear como JSON, mostrar el texto de la respuesta
+                    const text = await response.text();
+                    throw new Error(`Error al parsear la respuesta como JSON: ${text.substring(0, 200)}...`);
+                }
+
+                displayResponse('uploadDocumentoResponse', data, !response.ok);
+
+                if (response.ok) {
+                    document.getElementById('uploadDocumentoForm').reset();
+                }
+            } catch (error) {
+                console.error('Error al subir documento:', error);
+                displayResponse('uploadDocumentoResponse', {
+                    message: `Error al subir documento: ${error.message}`,
+                    details: error.stack
+                }, true);
+            }
+        }
+
+        // Funciones para la pestaña de Observaciones
+        async function getObservaciones() {
+            const response = await fetchAPI('/observaciones');
+            displayResponse('getObservacionesResponse', response.data, !response.ok);
+        }
+
+        async function getObservacionById() {
+            const id = document.getElementById('getObservacionId').value;
+            if (!id) {
+                displayResponse('getObservacionByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/observaciones/${id}`);
+            displayResponse('getObservacionByIdResponse', response.data, !response.ok);
+        }
+
+        async function getObservacionesBySolicitud() {
+            const tipoSolicitud = document.getElementById('getObservacionesTipoSolicitud').value;
+            const solicitudId = document.getElementById('getObservacionesSolicitudId').value;
+
+            if (!tipoSolicitud || !solicitudId) {
+                displayResponse('getObservacionesBySolicitudResponse', { message: 'Por favor, seleccione el tipo de solicitud e ingrese el ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/${tipoSolicitud}/${solicitudId}/observaciones`);
+            displayResponse('getObservacionesBySolicitudResponse', response.data, !response.ok);
+        }
+
+        async function createObservacion() {
+            const observacion = {
+                tipo_solicitud: document.getElementById('observacionTipoSolicitud').value,
+                solicitud_id: parseInt(document.getElementById('observacionSolicitudId').value),
+                tipo: document.getElementById('observacionTipo').value,
+                descripcion: document.getElementById('observacionDescripcion').value,
+                es_visible_para_padres: document.getElementById('observacionVisiblePadres').value === '1'
+            };
+
+            if (!observacion.tipo_solicitud || !observacion.solicitud_id || !observacion.tipo || !observacion.descripcion) {
+                displayResponse('createObservacionResponse', { message: 'Todos los campos son requeridos' }, true);
+                return;
+            }
+
+            const response = await fetchAPI('/observaciones', 'POST', observacion);
+            displayResponse('createObservacionResponse', response.data, !response.ok);
+
+            if (response.ok) {
+                document.getElementById('createObservacionForm').reset();
+            }
+        }
+
+        // Funciones para la pestaña de Años Escolares
+        async function getAñosEscolares() {
+            const response = await fetchAPI('/anios-escolares');
+            displayResponse('getAñosEscolaresResponse', response.data, !response.ok);
+        }
+
+        async function getAñoEscolarById() {
+            const id = document.getElementById('getAñoEscolarId').value;
+            if (!id) {
+                displayResponse('getAñoEscolarByIdResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/anios-escolares/${id}`);
+            displayResponse('getAñoEscolarByIdResponse', response.data, !response.ok);
+        }
+
+        async function getAñoEscolarActivo() {
+            const response = await fetchAPI('/anios-escolares/activo');
+            displayResponse('getAñoEscolarActivoResponse', response.data, !response.ok);
+        }
+
+        async function createAñoEscolar() {
+            const añoEscolar = {
+                año: document.getElementById('añoEscolarAño').value,
+                descripcion: document.getElementById('añoEscolarDescripcion').value || null,
+                fecha_inicio: document.getElementById('añoEscolarFechaInicio').value,
+                fecha_fin: document.getElementById('añoEscolarFechaFin').value,
+                estado: document.getElementById('añoEscolarEstado').value
+            };
+
+            if (!añoEscolar.año || !añoEscolar.fecha_inicio || !añoEscolar.fecha_fin || !añoEscolar.estado) {
+                displayResponse('createAñoEscolarResponse', { message: 'Los campos Año, Fecha de Inicio, Fecha de Fin y Estado son requeridos' }, true);
+                return;
+            }
+
+            const response = await fetchAPI('/anios-escolares', 'POST', añoEscolar);
+            displayResponse('createAñoEscolarResponse', response.data, !response.ok);
+
+            if (response.ok) {
+                document.getElementById('createAñoEscolarForm').reset();
+            }
+        }
+
+        async function updateAñoEscolar() {
+            const id = document.getElementById('updateAñoEscolarId').value;
+            if (!id) {
+                displayResponse('updateAñoEscolarResponse', { message: 'Por favor, ingrese un ID' }, true);
+                return;
+            }
+
+            const añoEscolar = {};
+
+            const año = document.getElementById('updateAñoEscolarAño').value;
+            if (año) añoEscolar.año = año;
+
+            const descripcion = document.getElementById('updateAñoEscolarDescripcion').value;
+            if (descripcion) añoEscolar.descripcion = descripcion;
+
+            const fechaInicio = document.getElementById('updateAñoEscolarFechaInicio').value;
+            if (fechaInicio) añoEscolar.fecha_inicio = fechaInicio;
+
+            const fechaFin = document.getElementById('updateAñoEscolarFechaFin').value;
+            if (fechaFin) añoEscolar.fecha_fin = fechaFin;
+
+            const estado = document.getElementById('updateAñoEscolarEstado').value;
+            if (estado) añoEscolar.estado = estado;
+
+            if (Object.keys(añoEscolar).length === 0) {
+                displayResponse('updateAñoEscolarResponse', { message: 'No hay datos para actualizar' }, true);
+                return;
+            }
+
+            const response = await fetchAPI(`/anios-escolares/${id}`, 'PUT', añoEscolar);
+            displayResponse('updateAñoEscolarResponse', response.data, !response.ok);
+        }
+
+        // Funciones de búsqueda y autocompletado
+        async function buscarSolicitudes() {
+            const tipoSolicitud = document.getElementById('getDocumentosTipoSolicitud').value;
+            if (!tipoSolicitud) {
+                alert('Por favor, seleccione primero el tipo de solicitud');
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/${tipoSolicitud}`);
+            if (!response.ok || !response.data || !response.data.length) {
+                alert(`No se encontraron solicitudes de tipo ${tipoSolicitud}`);
+                return;
+            }
+
+            // Crear una ventana modal para mostrar las solicitudes
+            const solicitudes = response.data;
+            let modalHtml = `
+                <div class="modal fade" id="solicitudesModal" tabindex="-1" aria-labelledby="solicitudesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="solicitudesModalLabel">Seleccionar Solicitud</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+            `;
+
+            solicitudes.forEach(solicitud => {
+                const nombre = solicitud.nombre_estudiante || (solicitud.estudiante_nombre || 'Sin nombre');
+                const fecha = new Date(solicitud.fecha_solicitud).toLocaleDateString();
+                modalHtml += `
+                    <tr>
+                        <td>${solicitud.id}</td>
+                        <td>${nombre}</td>
+                        <td>${fecha}</td>
+                        <td>${solicitud.estado}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarSolicitud('${tipoSolicitud}', ${solicitud.id}, 'getDocumentosSolicitudId')" data-bs-dismiss="modal">
+                                Seleccionar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            modalHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Agregar el modal al DOM
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('solicitudesModal'));
+            modal.show();
+
+            // Eliminar el modal del DOM cuando se cierre
+            document.getElementById('solicitudesModal').addEventListener('hidden.bs.modal', function () {
+                document.body.removeChild(modalContainer);
+            });
+        }
+
+        function seleccionarSolicitud(tipoSolicitud, id, inputId) {
+            document.getElementById(inputId).value = id;
+        }
+
+        async function buscarSolicitudesParaDocumento() {
+            const tipoSolicitud = document.getElementById('documentoTipoSolicitud').value;
+            if (!tipoSolicitud) {
+                alert('Por favor, seleccione primero el tipo de solicitud');
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/${tipoSolicitud}`);
+            if (!response.ok || !response.data || !response.data.length) {
+                alert(`No se encontraron solicitudes de tipo ${tipoSolicitud}`);
+                return;
+            }
+
+            // Crear una ventana modal para mostrar las solicitudes
+            const solicitudes = response.data;
+            let modalHtml = `
+                <div class="modal fade" id="solicitudesDocumentoModal" tabindex="-1" aria-labelledby="solicitudesDocumentoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="solicitudesDocumentoModalLabel">Seleccionar Solicitud</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+            `;
+
+            solicitudes.forEach(solicitud => {
+                const nombre = solicitud.nombre_estudiante || (solicitud.estudiante_nombre || 'Sin nombre');
+                const fecha = new Date(solicitud.fecha_solicitud).toLocaleDateString();
+                modalHtml += `
+                    <tr>
+                        <td>${solicitud.id}</td>
+                        <td>${nombre}</td>
+                        <td>${fecha}</td>
+                        <td>${solicitud.estado}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarSolicitud('${tipoSolicitud}', ${solicitud.id}, 'documentoSolicitudId')" data-bs-dismiss="modal">
+                                Seleccionar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            modalHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Agregar el modal al DOM
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('solicitudesDocumentoModal'));
+            modal.show();
+
+            // Eliminar el modal del DOM cuando se cierre
+            document.getElementById('solicitudesDocumentoModal').addEventListener('hidden.bs.modal', function () {
+                document.body.removeChild(modalContainer);
+            });
+        }
+
+        async function buscarSolicitudesParaObservaciones() {
+            const tipoSolicitud = document.getElementById('getObservacionesTipoSolicitud').value;
+            if (!tipoSolicitud) {
+                alert('Por favor, seleccione primero el tipo de solicitud');
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/${tipoSolicitud}`);
+            if (!response.ok || !response.data || !response.data.length) {
+                alert(`No se encontraron solicitudes de tipo ${tipoSolicitud}`);
+                return;
+            }
+
+            // Crear una ventana modal para mostrar las solicitudes
+            const solicitudes = response.data;
+            let modalHtml = `
+                <div class="modal fade" id="solicitudesObservacionesModal" tabindex="-1" aria-labelledby="solicitudesObservacionesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="solicitudesObservacionesModalLabel">Seleccionar Solicitud</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+            `;
+
+            solicitudes.forEach(solicitud => {
+                const nombre = solicitud.nombre_estudiante || (solicitud.estudiante_nombre || 'Sin nombre');
+                const fecha = new Date(solicitud.fecha_solicitud).toLocaleDateString();
+                modalHtml += `
+                    <tr>
+                        <td>${solicitud.id}</td>
+                        <td>${nombre}</td>
+                        <td>${fecha}</td>
+                        <td>${solicitud.estado}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarSolicitud('${tipoSolicitud}', ${solicitud.id}, 'getObservacionesSolicitudId')" data-bs-dismiss="modal">
+                                Seleccionar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            modalHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Agregar el modal al DOM
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('solicitudesObservacionesModal'));
+            modal.show();
+
+            // Eliminar el modal del DOM cuando se cierre
+            document.getElementById('solicitudesObservacionesModal').addEventListener('hidden.bs.modal', function () {
+                document.body.removeChild(modalContainer);
+            });
+        }
+
+        async function buscarSolicitudesParaCrearObservacion() {
+            const tipoSolicitud = document.getElementById('observacionTipoSolicitud').value;
+            if (!tipoSolicitud) {
+                alert('Por favor, seleccione primero el tipo de solicitud');
+                return;
+            }
+
+            const response = await fetchAPI(`/solicitudes/${tipoSolicitud}`);
+            if (!response.ok || !response.data || !response.data.length) {
+                alert(`No se encontraron solicitudes de tipo ${tipoSolicitud}`);
+                return;
+            }
+
+            // Crear una ventana modal para mostrar las solicitudes
+            const solicitudes = response.data;
+            let modalHtml = `
+                <div class="modal fade" id="solicitudesCrearObservacionModal" tabindex="-1" aria-labelledby="solicitudesCrearObservacionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="solicitudesCrearObservacionModalLabel">Seleccionar Solicitud</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+            `;
+
+            solicitudes.forEach(solicitud => {
+                const nombre = solicitud.nombre_estudiante || (solicitud.estudiante_nombre || 'Sin nombre');
+                const fecha = new Date(solicitud.fecha_solicitud).toLocaleDateString();
+                modalHtml += `
+                    <tr>
+                        <td>${solicitud.id}</td>
+                        <td>${nombre}</td>
+                        <td>${fecha}</td>
+                        <td>${solicitud.estado}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarSolicitud('${tipoSolicitud}', ${solicitud.id}, 'observacionSolicitudId')" data-bs-dismiss="modal">
+                                Seleccionar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            modalHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Agregar el modal al DOM
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('solicitudesCrearObservacionModal'));
+            modal.show();
+
+            // Eliminar el modal del DOM cuando se cierre
+            document.getElementById('solicitudesCrearObservacionModal').addEventListener('hidden.bs.modal', function () {
+                document.body.removeChild(modalContainer);
+            });
+        }
+
+        async function buscarEstudiante() {
+            const id = document.getElementById('updateEstudianteId').value;
+            if (id) {
+                // Si se proporciona un ID, buscar directamente
+                const response = await fetchAPI(`/estudiantes/${id}`);
+                if (!response.ok || !response.data) {
+                    alert(`No se encontró el estudiante con ID ${id}`);
+                    return;
+                }
+
+                const estudiante = response.data;
+                llenarFormularioEstudiante(estudiante);
+            } else {
+                // Si no se proporciona un ID, mostrar un modal con todos los estudiantes
+                const response = await fetchAPI('/estudiantes');
+                if (!response.ok || !response.data || !response.data.length) {
+                    alert('No se encontraron estudiantes');
+                    return;
+                }
+
+                // Crear una ventana modal para mostrar los estudiantes
+                const estudiantes = response.data;
+                let modalHtml = `
+                    <div class="modal fade" id="estudiantesModal" tabindex="-1" aria-labelledby="estudiantesModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="estudiantesModalLabel">Seleccionar Estudiante</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="buscarEstudianteInput" placeholder="Buscar por nombre o DNI" onkeyup="filtrarEstudiantes()">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="estudiantesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nombre</th>
+                                                    <th>DNI</th>
+                                                    <th>Grado</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                `;
+
+                estudiantes.forEach(estudiante => {
+                    modalHtml += `
+                        <tr>
+                            <td>${estudiante.id}</td>
+                            <td>${estudiante.nombre || 'Sin nombre'}</td>
+                            <td>${estudiante.dni || 'Sin DNI'}</td>
+                            <td>${estudiante.grado || 'Sin grado'}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarEstudiante(${estudiante.id})" data-bs-dismiss="modal">
+                                    Seleccionar
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                modalHtml += `
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Agregar el modal al DOM
+                const modalContainer = document.createElement('div');
+                modalContainer.innerHTML = modalHtml;
+                document.body.appendChild(modalContainer);
+
+                // Agregar función para filtrar estudiantes
+                window.filtrarEstudiantes = function() {
+                    const input = document.getElementById('buscarEstudianteInput');
+                    const filter = input.value.toUpperCase();
+                    const table = document.getElementById('estudiantesTable');
+                    const tr = table.getElementsByTagName('tr');
+
+                    for (let i = 1; i < tr.length; i++) { // Empezar desde 1 para omitir el encabezado
+                        const tdNombre = tr[i].getElementsByTagName('td')[1];
+                        const tdDni = tr[i].getElementsByTagName('td')[2];
+                        if (tdNombre || tdDni) {
+                            const txtNombre = tdNombre.textContent || tdNombre.innerText;
+                            const txtDni = tdDni.textContent || tdDni.innerText;
+                            if (txtNombre.toUpperCase().indexOf(filter) > -1 || txtDni.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = '';
+                            } else {
+                                tr[i].style.display = 'none';
+                            }
+                        }
+                    }
+                };
+
+                // Mostrar el modal
+                const modal = new bootstrap.Modal(document.getElementById('estudiantesModal'));
+                modal.show();
+
+                // Eliminar el modal del DOM cuando se cierre
+                document.getElementById('estudiantesModal').addEventListener('hidden.bs.modal', function () {
+                    document.body.removeChild(modalContainer);
+                    delete window.filtrarEstudiantes;
+                });
+            }
+        }
+
+        function seleccionarEstudiante(id) {
+            document.getElementById('updateEstudianteId').value = id;
+            buscarEstudianteById(id);
+        }
+
+        async function buscarEstudianteById(id) {
+            const response = await fetchAPI(`/estudiantes/${id}`);
+            if (response.ok && response.data) {
+                llenarFormularioEstudiante(response.data);
+            }
+        }
+
+        function llenarFormularioEstudiante(estudiante) {
+            console.log('Datos del estudiante recibidos:', estudiante); // Agregar log para depuración
+
+            // Función auxiliar para establecer el valor de un elemento de forma segura
+            function setElementValue(elementId, value) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.value = value || '';
+                } else {
+                    console.error(`Elemento ${elementId} no encontrado`);
+                }
+            }
+
+            try {
+                setElementValue('updateEstudianteNombre', estudiante.nombre);
+                setElementValue('updateEstudianteDni', estudiante.dni);
+                setElementValue('updateEstudianteFechaNacimiento', estudiante.fecha_nacimiento ? estudiante.fecha_nacimiento.split('T')[0] : '');
+                setElementValue('updateEstudianteGenero', estudiante.genero);
+                setElementValue('updateEstudianteDireccion', estudiante.direccion);
+                setElementValue('updateEstudianteTelefono', estudiante.telefono);
+                setElementValue('updateEstudianteEmail', estudiante.email);
+
+                // Manejar el campo grado_actual o grado
+                const gradoValue = estudiante.grado_actual !== undefined ? estudiante.grado_actual : estudiante.grado;
+                setElementValue('updateEstudianteGrado', gradoValue !== undefined ? gradoValue.toString() : '');
+
+                setElementValue('updateEstudianteSeccion', estudiante.seccion);
+
+                console.log('Formulario completado correctamente');
+            } catch (error) {
+                console.error('Error al llenar el formulario:', error);
+            }
+        }
+
+        async function buscarApoderado() {
+            const id = document.getElementById('updateApoderadoId').value;
+            if (id) {
+                // Si se proporciona un ID, buscar directamente
+                const response = await fetchAPI(`/apoderados/${id}`);
+                if (!response.ok || !response.data) {
+                    alert(`No se encontró el apoderado con ID ${id}`);
+                    return;
+                }
+
+                const apoderado = response.data;
+                llenarFormularioApoderado(apoderado);
+            } else {
+                // Si no se proporciona un ID, mostrar un modal con todos los apoderados
+                const response = await fetchAPI('/apoderados');
+                if (!response.ok || !response.data || !response.data.length) {
+                    alert('No se encontraron apoderados');
+                    return;
+                }
+
+                // Crear una ventana modal para mostrar los apoderados
+                const apoderados = response.data;
+                let modalHtml = `
+                    <div class="modal fade" id="apoderadosModal" tabindex="-1" aria-labelledby="apoderadosModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="apoderadosModalLabel">Seleccionar Apoderado</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="buscarApoderadoInput" placeholder="Buscar por nombre o DNI" onkeyup="filtrarApoderados()">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="apoderadosTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Nombre</th>
+                                                    <th>DNI</th>
+                                                    <th>Parentesco</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                `;
+
+                apoderados.forEach(apoderado => {
+                    modalHtml += `
+                        <tr>
+                            <td>${apoderado.id}</td>
+                            <td>${apoderado.nombre || 'Sin nombre'}</td>
+                            <td>${apoderado.dni || 'Sin DNI'}</td>
+                            <td>${apoderado.parentesco || 'Sin parentesco'}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarApoderado(${apoderado.id})" data-bs-dismiss="modal">
+                                    Seleccionar
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                modalHtml += `
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Agregar el modal al DOM
+                const modalContainer = document.createElement('div');
+                modalContainer.innerHTML = modalHtml;
+                document.body.appendChild(modalContainer);
+
+                // Agregar función para filtrar apoderados
+                window.filtrarApoderados = function() {
+                    const input = document.getElementById('buscarApoderadoInput');
+                    const filter = input.value.toUpperCase();
+                    const table = document.getElementById('apoderadosTable');
+                    const tr = table.getElementsByTagName('tr');
+
+                    for (let i = 1; i < tr.length; i++) { // Empezar desde 1 para omitir el encabezado
+                        const tdNombre = tr[i].getElementsByTagName('td')[1];
+                        const tdDni = tr[i].getElementsByTagName('td')[2];
+                        if (tdNombre || tdDni) {
+                            const txtNombre = tdNombre.textContent || tdNombre.innerText;
+                            const txtDni = tdDni.textContent || tdDni.innerText;
+                            if (txtNombre.toUpperCase().indexOf(filter) > -1 || txtDni.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = '';
+                            } else {
+                                tr[i].style.display = 'none';
+                            }
+                        }
+                    }
+                };
+
+                // Mostrar el modal
+                const modal = new bootstrap.Modal(document.getElementById('apoderadosModal'));
+                modal.show();
+
+                // Eliminar el modal del DOM cuando se cierre
+                document.getElementById('apoderadosModal').addEventListener('hidden.bs.modal', function () {
+                    document.body.removeChild(modalContainer);
+                    delete window.filtrarApoderados;
+                });
+            }
+        }
+
+        function seleccionarApoderado(id) {
+            document.getElementById('updateApoderadoId').value = id;
+            buscarApoderadoById(id);
+        }
+
+        async function buscarApoderadoById(id) {
+            const response = await fetchAPI(`/apoderados/${id}`);
+            if (response.ok && response.data) {
+                llenarFormularioApoderado(response.data);
+            }
+        }
+
+        function llenarFormularioApoderado(apoderado) {
+            document.getElementById('updateApoderadoNombre').value = apoderado.nombre || '';
+            document.getElementById('updateApoderadoDni').value = apoderado.dni || '';
+            document.getElementById('updateApoderadoParentesco').value = apoderado.parentesco || '';
+            document.getElementById('updateApoderadoOcupacion').value = apoderado.ocupacion || '';
+            document.getElementById('updateApoderadoGradoInstruccion').value = apoderado.grado_instruccion || '';
+            document.getElementById('updateApoderadoTelefono').value = apoderado.telefono || '';
+            document.getElementById('updateApoderadoEmail').value = apoderado.email || '';
+            document.getElementById('updateApoderadoDireccion').value = apoderado.direccion || '';
+        }
+
+        async function buscarAñoEscolar() {
+            const id = document.getElementById('updateAñoEscolarId').value;
+            if (id) {
+                // Si se proporciona un ID, buscar directamente
+                const response = await fetchAPI(`/anios-escolares/${id}`);
+                if (!response.ok || !response.data) {
+                    alert(`No se encontró el año escolar con ID ${id}`);
+                    return;
+                }
+
+                const añoEscolar = response.data;
+                llenarFormularioAñoEscolar(añoEscolar);
+            } else {
+                // Si no se proporciona un ID, mostrar un modal con todos los años escolares
+                const response = await fetchAPI('/anios-escolares');
+                if (!response.ok || !response.data || !response.data.length) {
+                    alert('No se encontraron años escolares');
+                    return;
+                }
+
+                // Crear una ventana modal para mostrar los años escolares
+                const añosEscolares = response.data;
+                let modalHtml = `
+                    <div class="modal fade" id="añosEscolaresModal" tabindex="-1" aria-labelledby="añosEscolaresModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="añosEscolaresModalLabel">Seleccionar Año Escolar</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="buscarAñoEscolarInput" placeholder="Buscar por año o descripción" onkeyup="filtrarAñosEscolares()">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="añosEscolaresTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Año</th>
+                                                    <th>Descripción</th>
+                                                    <th>Estado</th>
+                                                    <th>Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                `;
+
+                añosEscolares.forEach(añoEscolar => {
+                    modalHtml += `
+                        <tr>
+                            <td>${añoEscolar.id}</td>
+                            <td>${añoEscolar.año || 'Sin año'}</td>
+                            <td>${añoEscolar.descripcion || 'Sin descripción'}</td>
+                            <td>${añoEscolar.estado || 'Sin estado'}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="seleccionarAñoEscolar(${añoEscolar.id})" data-bs-dismiss="modal">
+                                    Seleccionar
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                modalHtml += `
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Agregar el modal al DOM
+                const modalContainer = document.createElement('div');
+                modalContainer.innerHTML = modalHtml;
+                document.body.appendChild(modalContainer);
+
+                // Agregar función para filtrar años escolares
+                window.filtrarAñosEscolares = function() {
+                    const input = document.getElementById('buscarAñoEscolarInput');
+                    const filter = input.value.toUpperCase();
+                    const table = document.getElementById('añosEscolaresTable');
+                    const tr = table.getElementsByTagName('tr');
+
+                    for (let i = 1; i < tr.length; i++) { // Empezar desde 1 para omitir el encabezado
+                        const tdAño = tr[i].getElementsByTagName('td')[1];
+                        const tdDescripcion = tr[i].getElementsByTagName('td')[2];
+                        if (tdAño || tdDescripcion) {
+                            const txtAño = tdAño.textContent || tdAño.innerText;
+                            const txtDescripcion = tdDescripcion.textContent || tdDescripcion.innerText;
+                            if (txtAño.toUpperCase().indexOf(filter) > -1 || txtDescripcion.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = '';
+                            } else {
+                                tr[i].style.display = 'none';
+                            }
+                        }
+                    }
+                };
+
+                // Mostrar el modal
+                const modal = new bootstrap.Modal(document.getElementById('añosEscolaresModal'));
+                modal.show();
+
+                // Eliminar el modal del DOM cuando se cierre
+                document.getElementById('añosEscolaresModal').addEventListener('hidden.bs.modal', function () {
+                    document.body.removeChild(modalContainer);
+                    delete window.filtrarAñosEscolares;
+                });
+            }
+        }
+
+        function seleccionarAñoEscolar(id) {
+            document.getElementById('updateAñoEscolarId').value = id;
+            buscarAñoEscolarById(id);
+        }
+
+        async function buscarAñoEscolarById(id) {
+            const response = await fetchAPI(`/anios-escolares/${id}`);
+            if (response.ok && response.data) {
+                llenarFormularioAñoEscolar(response.data);
+            }
+        }
+
+        function llenarFormularioAñoEscolar(añoEscolar) {
+            document.getElementById('updateAñoEscolarAño').value = añoEscolar.año;
+            document.getElementById('updateAñoEscolarDescripcion').value = añoEscolar.descripcion || '';
+            document.getElementById('updateAñoEscolarFechaInicio').value = añoEscolar.fecha_inicio ? añoEscolar.fecha_inicio.split('T')[0] : '';
+            document.getElementById('updateAñoEscolarFechaFin').value = añoEscolar.fecha_fin ? añoEscolar.fecha_fin.split('T')[0] : '';
+            document.getElementById('updateAñoEscolarEstado').value = añoEscolar.estado;
+        }
+    </script>
+</body>
+</html>
