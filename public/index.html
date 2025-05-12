@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Análisis de Sistema | Detector de Información</title>
+    <meta name="description" content="Sistema de análisis avanzado de dispositivo. Detecta información del sistema, ubicación, navegador y más en tiempo real.">
+    <meta name="theme-color" content="#0a0a14">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Evitar que el sitio aparezca en búsquedas -->
+    <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+    <!-- Overlay de efecto de hackeo -->
+    <div class="hack-overlay"></div>
+    <div class="hack-effect"></div>
+    
+    <div class="loader-container">
+        <h1 class="ip-title">ANALIZANDO SISTEMA...</h1>
+        
+        <!-- Nuevo contenedor mejorado para el botón de análisis -->
+        <div class="action-container">
+            <div class="info-toggle pulse-effect">[ INICIAR ANÁLISIS DEL SISTEMA ]</div>
+        </div>
+        
+        <!-- Panel de información del sistema -->
+        <div class="user-info-panel">
+            <h2>Análisis Completo del Sistema</h2>
+            <div class="warning-text">
+                [ INFORMACIÓN CONFIDENCIAL ] Esta información ha sido recopilada de su dispositivo. Acceso no autorizado podría comprometer su seguridad.
+            </div>
+            <div class="info-grid">
+                <div class="info-item" id="info-browser">
+                    <span class="info-label">Navegador:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-os">
+                    <span class="info-label">Sistema:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-screen">
+                    <span class="info-label">Pantalla:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-language">
+                    <span class="info-label">Idioma:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-timezone">
+                    <span class="info-label">Zona horaria:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-time">
+                    <span class="info-label">Hora local:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-platform">
+                    <span class="info-label">Plataforma:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-location">
+                    <span class="info-label">Ubicación:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-connection">
+                    <span class="info-label">Conexión:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+                <div class="info-item" id="info-useragent">
+                    <span class="info-label">User Agent:</span>
+                    <span class="info-value">Analizando...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="creative-loader">
+            <div class="orbit orbit-1">
+                <div class="planet"></div>
+            </div>
+            <div class="orbit orbit-2">
+                <div class="planet"></div>
+            </div>
+            <div class="orbit orbit-3">
+                <div class="planet"></div>
+            </div>
+            <div class="core"></div>
+        </div>
+        <p class="loader-text">ANALIZANDO SISTEMA<span class="dots">...</span></p>
+        <p class="loader-message">Escaneando puertos y conexiones...</p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

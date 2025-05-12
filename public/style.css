@@ -1,0 +1,734 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0a0a14;
+    color: white;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.loader-container {
+    text-align: center;
+    position: relative;
+    max-width: 90%;
+    width: 800px;
+    padding: 20px 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ip-title {
+    font-size: clamp(18px, 5vw, 28px);
+    margin-bottom: 20px;
+    color: #ff3b3b;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    letter-spacing: 1px;
+    animation: hackerGlow 2s infinite alternate;
+    word-break: break-word;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid rgba(255, 59, 59, 0.3);
+    background-color: rgba(255, 0, 0, 0.05);
+    border-radius: 5px;
+}
+
+.ip-title.highlight {
+    color: #ff3b3b;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.9);
+    animation: warningGlow 1s infinite alternate;
+    border-color: rgba(255, 59, 59, 0.6);
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+@keyframes hackerGlow {
+    from { text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); }
+    to { text-shadow: 0 0 20px rgba(255, 0, 0, 1); }
+}
+
+@keyframes warningGlow {
+    from { text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); opacity: 0.8; }
+    to { text-shadow: 0 0 25px rgba(255, 0, 0, 1); opacity: 1; }
+}
+
+/* Contenedor para el botón de acción */
+.action-container {
+    margin: 20px 0;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Estilos para el botón de análisis */
+.info-toggle {
+    display: inline-block;
+    background-color: rgba(255, 59, 59, 0.2);
+    color: #ff3b3b;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    font-size: clamp(14px, 3vw, 16px);
+    border: 1px solid rgba(255, 59, 59, 0.4);
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 150;
+    max-width: 80%;
+}
+
+/* Efecto de pulso para el botón */
+.pulse-effect {
+    animation: pulseButton 2s infinite alternate;
+}
+
+@keyframes pulseButton {
+    0% { transform: scale(1); box-shadow: 0 0 5px rgba(255, 59, 59, 0.5); }
+    100% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 59, 59, 0.8); }
+}
+
+.info-toggle:hover {
+    background-color: rgba(255, 59, 59, 0.3);
+    box-shadow: 0 0 15px rgba(255, 59, 59, 0.8);
+    transform: translateY(-2px);
+}
+
+.user-info-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background-color: rgba(10, 10, 20, 0.95);
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    border: 1px solid rgba(255, 59, 59, 0.5);
+    margin-bottom: 20px;
+    max-width: 95vw;
+    width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.user-info-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255, 59, 59, 0.05),
+        rgba(255, 59, 59, 0.05) 10px,
+        rgba(0, 0, 0, 0) 10px,
+        rgba(0, 0, 0, 0) 20px
+    );
+    pointer-events: none;
+}
+
+.user-info-panel.active {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: glitchEffect 0.3s ease;
+}
+
+.user-info-panel h2 {
+    color: #ff3b3b;
+    font-size: clamp(16px, 4vw, 22px);
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    border-bottom: 1px solid rgba(255, 59, 59, 0.3);
+    padding-bottom: 10px;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+.warning-text {
+    color: #ff3b3b;
+    text-align: center;
+    font-size: clamp(12px, 2.5vw, 14px);
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px dashed rgba(255, 59, 59, 0.5);
+    background-color: rgba(255, 0, 0, 0.1);
+    animation: warningBlink 2s infinite alternate;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+@keyframes warningBlink {
+    0% { background-color: rgba(255, 0, 0, 0.1); }
+    100% { background-color: rgba(255, 0, 0, 0.2); }
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+.info-item {
+    padding: 10px;
+    background-color: rgba(255, 59, 59, 0.05);
+    border-radius: 5px;
+    border-left: 3px solid #ff3b3b;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 59, 59, 0.1) 50%,
+        transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: scanLine 3s infinite;
+}
+
+@keyframes scanLine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.info-item:hover {
+    background-color: rgba(255, 59, 59, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+}
+
+.info-label {
+    font-weight: bold;
+    color: #ff3b3b;
+    display: block;
+    margin-bottom: 3px;
+    font-size: clamp(10px, 2.5vw, 12px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+.info-value {
+    color: #ddd;
+    font-size: clamp(12px, 3vw, 14px);
+    word-break: break-word;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+.creative-loader {
+    position: relative;
+    width: min(200px, 70vw);
+    height: min(200px, 70vw);
+    margin: 0 auto;
+}
+
+.core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(30px, 12vw);
+    height: min(30px, 12vw);
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ff3b3b, #8b0000);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    z-index: 10;
+}
+
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px dashed rgba(255, 59, 59, 0.3);
+    border-radius: 50%;
+}
+
+.orbit-1 {
+    width: min(80px, 35vw);
+    height: min(80px, 35vw);
+}
+
+.orbit-2 {
+    width: min(130px, 50vw);
+    height: min(130px, 50vw);
+}
+
+.orbit-3 {
+    width: min(180px, 65vw);
+    height: min(180px, 65vw);
+}
+
+.planet {
+    position: absolute;
+    width: min(15px, 5vw);
+    height: min(15px, 5vw);
+    border-radius: 50%;
+    background-color: #ff3b3b;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+}
+
+.orbit-1 .planet {
+    background-color: #ff3b3b;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+}
+
+.orbit-2 .planet {
+    background-color: #ff7b00;
+    box-shadow: 0 0 10px rgba(255, 123, 0, 0.8);
+}
+
+.orbit-3 .planet {
+    background-color: #ffcc00;
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+}
+
+.loader-text {
+    margin-top: 30px;
+    font-size: clamp(16px, 5vw, 24px);
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.loader-message {
+    font-size: clamp(12px, 3vw, 16px);
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 10px;
+    padding: 0 10px;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+.dots {
+    display: inline-block;
+    animation: dotsAnimation 1.5s infinite;
+    color: #ff3b3b;
+}
+
+@keyframes dotsAnimation {
+    0% { opacity: 0.2; }
+    20% { opacity: 1; }
+    40% { opacity: 0.2; }
+    60% { opacity: 1; }
+    80% { opacity: 0.2; }
+    100% { opacity: 0.2; }
+}
+
+/* Overlay de hackeo para toda la página */
+.hack-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    opacity: 0.15;
+}
+
+.hack-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 51;
+    background: radial-gradient(
+        circle at center,
+        transparent 0%,
+        rgba(0, 0, 0, 0.5) 100%
+    );
+}
+
+/* Estilos para el mensaje de autodestrucción */
+.self-destruct-warning {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ff3b3b;
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: bold;
+    padding: 15px 30px;
+    border: 2px dashed #ff3b3b;
+    text-transform: uppercase;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    letter-spacing: 2px;
+    z-index: 200;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    animation: destructPulse 0.5s infinite alternate;
+    white-space: nowrap;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+@keyframes destructPulse {
+    from { 
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+    }
+    to { 
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        text-shadow: 0 0 15px rgba(255, 0, 0, 1);
+    }
+}
+
+/* Efecto de desintegración */
+@keyframes disintegrate {
+    0% { 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter: blur(0px);
+    }
+    20% {
+        opacity: 0.9;
+        transform: translate(-52%, -48%) scale(1.01);
+        filter: blur(2px);
+    }
+    40% {
+        opacity: 0.8;
+        transform: translate(-48%, -52%) scale(1.02);
+        filter: blur(4px);
+    }
+    60% {
+        opacity: 0.6;
+        transform: translate(-51%, -49%) scale(1.05);
+        filter: blur(6px);
+    }
+    80% {
+        opacity: 0.4;
+        transform: translate(-49%, -51%) scale(1.1);
+        filter: blur(8px);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.2);
+        filter: blur(10px);
+    }
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media (max-width: 768px) {
+    body, html {
+        align-items: flex-start;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    
+    .loader-container {
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 95%;
+    }
+    
+    .user-info-panel {
+        padding: 15px;
+        max-height: 85vh;
+        width: 95vw;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-toggle {
+        width: 90%;
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .ip-title {
+        font-size: clamp(16px, 4vw, 22px);
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-info-panel h2 {
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+    
+    .info-item {
+        padding: 8px;
+    }
+    
+    .loader-message {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+    
+    .user-info-panel {
+        padding: 10px;
+        max-width: 95vw;
+    }
+    
+    .warning-text {
+        font-size: 11px;
+        padding: 8px;
+    }
+    
+    .info-toggle {
+        margin-bottom: 10px;
+        font-size: 12px;
+    }
+}
+
+/* Estilos para el efecto de desintegración */
+.user-info-panel.disintegrating {
+    transition: clip-path 0.3s ease;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); /* Comienza mostrando todo el panel */
+}
+
+.dust-particle {
+    position: absolute;
+    pointer-events: none;
+    box-shadow: 0 0 2px rgba(255, 59, 59, 0.8);
+    z-index: 1000;
+    transform-origin: center center;
+}
+
+.particle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+    will-change: transform; /* Optimización para rendimiento */
+}
+
+.dust-particle {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    will-change: transform, opacity; /* Optimización para mejor rendimiento */
+    contain: layout; /* Mejora de rendimiento */
+}
+
+/* Panel desintegrándose */
+.user-info-panel.disintegrating {
+    will-change: opacity;
+    overflow: hidden;
+    backdrop-filter: none; /* Desactivar para mejorar rendimiento */
+    transition: none; /* Controlar la animación desde JS para mejor rendimiento */
+}
+
+/* Máscara de desintegración diagonal */
+.diagonal-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    will-change: background;
+    z-index: 10;
+}
+
+/* Efecto personalizado para simular la dispersión del polvo */
+@keyframes dustScatter {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--dx), var(--dy)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Eliminar los estilos del contador regresivo que ya no se utilizará */
+.countdown-timer {
+    display: none; /* Ocultar en lugar de eliminar para evitar errores de referencia */
+}
+
+/* Mensaje de advertencia de autodestrucción */
+.warning-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ff3b3b;
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: bold;
+    padding: 15px 30px;
+    border: 2px dashed #ff3b3b;
+    text-transform: uppercase;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    letter-spacing: 2px;
+    z-index: 200;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    animation: destructPulse 0.5s infinite alternate;
+    white-space: nowrap;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+@keyframes destructPulse {
+    from { 
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+    }
+    to { 
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        text-shadow: 0 0 15px rgba(255, 0, 0, 1);
+    }
+}
+
+/* Pantalla de error tipo pantalla azul */
+.error-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000aa;
+    color: #ffffff;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+}
+
+.error-content {
+    width: 90%;
+    max-width: 800px;
+    padding: 30px;
+    text-align: center;
+}
+
+.error-title {
+    font-size: clamp(24px, 6vw, 48px);
+    margin-bottom: 30px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.error-message {
+    font-size: clamp(16px, 4vw, 24px);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.error-code {
+    display: block;
+    margin-top: 20px;
+    font-size: clamp(12px, 3vw, 16px);
+    color: #cccccc;
+}
+
+/* Efecto de líneas de interferencia */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 100% 2px;
+    z-index: 10001;
+    pointer-events: none;
+    animation: scanline 8ms linear infinite;
+}
+
+@keyframes scanline {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(2px);
+    }
+}
+
+/* Mensaje final después de corte de conexión */
+.final-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ff0000;
+    font-size: clamp(24px, 8vw, 48px);
+    font-family: 'Share Tech Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    animation: finalGlow 1.5s infinite alternate;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+@keyframes finalGlow {
+    from { text-shadow: 0 0 5px rgba(255, 0, 0, 0.7); opacity: 0.8; }
+    to { text-shadow: 0 0 15px rgba(255, 0, 0, 1); opacity: 1; }
+}
+
+/* Animación para aparecer gradualmente */
+.final-message {
+    animation: finalAppear 1s forwards, finalGlow 1.5s infinite alternate 1s;
+}
+
+@keyframes finalAppear {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}

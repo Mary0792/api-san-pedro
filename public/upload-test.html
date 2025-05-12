@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Subida de Documentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .upload-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .upload-header {
+            background-color: #f1f8ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0d6efd;
+        }
+        .file-item {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #dee2e6;
+        }
+        .progress {
+            height: 10px;
+            margin-top: 5px;
+        }
+        .response-container {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .response-success {
+            border-left: 4px solid #198754;
+        }
+        .response-error {
+            border-left: 4px solid #dc3545;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+        }
+        .document-type {
+            font-weight: bold;
+            color: #495057;
+        }
+        .upload-btn {
+            margin-top: 20px;
+        }
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-file {
+            cursor: pointer;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Prueba de Subida de Documentos</h1>
+        <p class="text-center mb-5">Esta página permite probar la subida de documentos para los diferentes tipos de matrícula</p>
+
+        <!-- Pestañas para los diferentes tipos de matrícula -->
+        <ul class="nav nav-pills mb-4 justify-content-center" id="matriculaTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="nueva-tab" data-bs-toggle="pill" data-bs-target="#nueva" type="button" role="tab" aria-controls="nueva" aria-selected="true">Primera Vez</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="traslado-tab" data-bs-toggle="pill" data-bs-target="#traslado" type="button" role="tab" aria-controls="traslado" aria-selected="false">Traslado</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="siguiente-tab" data-bs-toggle="pill" data-bs-target="#siguiente" type="button" role="tab" aria-controls="siguiente" aria-selected="false">Siguiente Grado</button>
+            </li>
+        </ul>
+
+        <!-- Contenido de las pestañas -->
+        <div class="tab-content" id="matriculaTabsContent">
+            <!-- Sección de Primera Vez -->
+            <div class="tab-pane fade show active" id="nueva" role="tabpanel" aria-labelledby="nueva-tab">
+                <div class="upload-section">
+                    <div class="upload-header">
+                        <h3>Matrícula Primera Vez</h3>
+                        <p class="mb-0">Documentos requeridos: 5</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="solicitudIdNueva" class="form-label">ID de Solicitud</label>
+                        <input type="number" class="form-control" id="solicitudIdNueva" placeholder="Ingrese el ID de la solicitud">
+                    </div>
+
+                    <div id="nuevaDocumentos">
+                        <div class="file-item">
+                            <div class="document-type">Partida de Nacimiento</div>
+                            <input type="file" class="form-control mt-2" data-tipo="partida_nacimiento" data-solicitud-tipo="nueva">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Copia DNI Estudiante</div>
+                            <input type="file" class="form-control mt-2" data-tipo="copia_dni_estudiante" data-solicitud-tipo="nueva">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Copia DNI Apoderado</div>
+                            <input type="file" class="form-control mt-2" data-tipo="copia_dni_apoderado" data-solicitud-tipo="nueva">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Certificado de Vacunación</div>
+                            <input type="file" class="form-control mt-2" data-tipo="certificado_vacunacion" data-solicitud-tipo="nueva">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Foto del Estudiante</div>
+                            <input type="file" class="form-control mt-2" data-tipo="foto_estudiante" data-solicitud-tipo="nueva">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary upload-btn" onclick="subirDocumentos('nueva')">Subir Documentos</button>
+                    <div id="nuevaResponse" class="response-container d-none"></div>
+                </div>
+            </div>
+
+            <!-- Sección de Traslado -->
+            <div class="tab-pane fade" id="traslado" role="tabpanel" aria-labelledby="traslado-tab">
+                <div class="upload-section">
+                    <div class="upload-header">
+                        <h3>Matrícula por Traslado</h3>
+                        <p class="mb-0">Documentos requeridos: 5</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="solicitudIdTraslado" class="form-label">ID de Solicitud</label>
+                        <input type="number" class="form-control" id="solicitudIdTraslado" placeholder="Ingrese el ID de la solicitud">
+                    </div>
+
+                    <div id="trasladoDocumentos">
+                        <div class="file-item">
+                            <div class="document-type">Constancia de Matrícula</div>
+                            <input type="file" class="form-control mt-2" data-tipo="constancia_matricula" data-solicitud-tipo="traslado">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Libreta de Notas</div>
+                            <input type="file" class="form-control mt-2" data-tipo="libreta_notas" data-solicitud-tipo="traslado">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Partida de Nacimiento</div>
+                            <input type="file" class="form-control mt-2" data-tipo="partida_nacimiento" data-solicitud-tipo="traslado">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Copia DNI Estudiante</div>
+                            <input type="file" class="form-control mt-2" data-tipo="copia_dni_estudiante" data-solicitud-tipo="traslado">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Copia DNI Apoderado</div>
+                            <input type="file" class="form-control mt-2" data-tipo="copia_dni_apoderado" data-solicitud-tipo="traslado">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary upload-btn" onclick="subirDocumentos('traslado')">Subir Documentos</button>
+                    <div id="trasladoResponse" class="response-container d-none"></div>
+                </div>
+            </div>
+
+            <!-- Sección de Siguiente Grado -->
+            <div class="tab-pane fade" id="siguiente" role="tabpanel" aria-labelledby="siguiente-tab">
+                <div class="upload-section">
+                    <div class="upload-header">
+                        <h3>Matrícula Siguiente Grado</h3>
+                        <p class="mb-0">Documentos requeridos: 2</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="solicitudIdSiguiente" class="form-label">ID de Solicitud</label>
+                        <input type="number" class="form-control" id="solicitudIdSiguiente" placeholder="Ingrese el ID de la solicitud">
+                    </div>
+
+                    <div id="siguienteDocumentos">
+                        <div class="file-item">
+                            <div class="document-type">Libreta de Notas</div>
+                            <input type="file" class="form-control mt-2" data-tipo="libreta_notas" data-solicitud-tipo="siguiente">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="file-item">
+                            <div class="document-type">Comprobante APAFA</div>
+                            <input type="file" class="form-control mt-2" data-tipo="comprobante_apafa" data-solicitud-tipo="siguiente">
+                            <div class="progress d-none">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary upload-btn" onclick="subirDocumentos('siguiente')">Subir Documentos</button>
+                    <div id="siguienteResponse" class="response-container d-none"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // Función para mostrar respuestas
+        function displayResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.className = `response-container ${isError ? 'response-error' : 'response-success'}`;
+            element.textContent = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+            element.classList.remove('d-none');
+        }
+
+        // Función para subir documentos
+        async function subirDocumentos(tipoSolicitud) {
+            const solicitudId = document.getElementById(`solicitudId${tipoSolicitud.charAt(0).toUpperCase() + tipoSolicitud.slice(1)}`).value;
+
+            if (!solicitudId) {
+                displayResponse(`${tipoSolicitud}Response`, "Por favor, ingrese un ID de solicitud válido", true);
+                return;
+            }
+
+            const fileInputs = document.querySelectorAll(`#${tipoSolicitud}Documentos input[type="file"]`);
+            let hasFiles = false;
+
+            for (const input of fileInputs) {
+                if (input.files.length > 0) {
+                    hasFiles = true;
+                    break;
+                }
+            }
+
+            if (!hasFiles) {
+                displayResponse(`${tipoSolicitud}Response`, "Por favor, seleccione al menos un archivo para subir", true);
+                return;
+            }
+
+            const results = [];
+            let hasErrors = false;
+
+            for (const input of fileInputs) {
+                if (input.files.length === 0) continue;
+
+                const file = input.files[0];
+                const tipoDocumento = input.dataset.tipo;
+                const progressBar = input.nextElementSibling;
+                const progressBarInner = progressBar.querySelector('.progress-bar');
+
+                progressBar.classList.remove('d-none');
+                progressBarInner.style.width = '0%';
+                progressBarInner.textContent = '0%';
+
+                try {
+                    const formData = new FormData();
+                    formData.append('documento', file);
+                    formData.append('solicitud_id', solicitudId);
+                    formData.append('tipo_documento', tipoDocumento);
+                    formData.append('tipo_solicitud', input.dataset.solicitudTipo);
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', `${API_URL}/documentos`, true);
+
+                    xhr.upload.onprogress = function(e) {
+                        if (e.lengthComputable) {
+                            const percentComplete = Math.round((e.loaded / e.total) * 100);
+                            progressBarInner.style.width = percentComplete + '%';
+                            progressBarInner.textContent = percentComplete + '%';
+                        }
+                    };
+
+                    xhr.onload = function() {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            const response = JSON.parse(xhr.responseText);
+                            results.push({
+                                tipo: tipoDocumento,
+                                success: true,
+                                data: response
+                            });
+                        } else {
+                            let errorMsg = "Error al subir el documento";
+                            try {
+                                const errorResponse = JSON.parse(xhr.responseText);
+                                errorMsg = errorResponse.message || errorMsg;
+                            } catch (e) {}
+
+                            results.push({
+                                tipo: tipoDocumento,
+                                success: false,
+                                error: errorMsg
+                            });
+                            hasErrors = true;
+                        }
+
+                        // Verificar si todos los archivos se han procesado
+                        if (results.length === Array.from(fileInputs).filter(i => i.files.length > 0).length) {
+                            displayResponse(`${tipoSolicitud}Response`, {
+                                message: hasErrors ? "Algunos documentos no se pudieron subir" : "Todos los documentos se subieron correctamente",
+                                results: results
+                            }, hasErrors);
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        results.push({
+                            tipo: tipoDocumento,
+                            success: false,
+                            error: "Error de red al subir el documento"
+                        });
+                        hasErrors = true;
+
+                        // Verificar si todos los archivos se han procesado
+                        if (results.length === Array.from(fileInputs).filter(i => i.files.length > 0).length) {
+                            displayResponse(`${tipoSolicitud}Response`, {
+                                message: "Algunos documentos no se pudieron subir",
+                                results: results
+                            }, true);
+                        }
+                    };
+
+                    xhr.send(formData);
+                } catch (error) {
+                    progressBar.classList.add('d-none');
+                    results.push({
+                        tipo: tipoDocumento,
+                        success: false,
+                        error: error.message
+                    });
+                    hasErrors = true;
+
+                    // Verificar si todos los archivos se han procesado
+                    if (results.length === Array.from(fileInputs).filter(i => i.files.length > 0).length) {
+                        displayResponse(`${tipoSolicitud}Response`, {
+                            message: "Algunos documentos no se pudieron subir",
+                            results: results
+                        }, true);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

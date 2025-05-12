@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Documentos de Matrícula</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .upload-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        .drop-zone:hover {
+            border-color: #0d6efd;
+            background-color: #f8f9fa;
+        }
+        .drop-zone.dragover {
+            border-color: #0d6efd;
+            background-color: #e9ecef;
+        }
+        .file-list {
+            margin-top: 1rem;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            background-color: #f8f9fa;
+        }
+        .file-item .file-info {
+            flex-grow: 1;
+        }
+        .file-item .file-actions {
+            margin-left: 1rem;
+        }
+        .progress {
+            height: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .document-type {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .upload-summary {
+            margin-top: 2rem;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .required-documents {
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .document-status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .document-status i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+        .document-status.pending {
+            color: #dc3545;
+            border-left: 4px solid #dc3545;
+        }
+        .document-status.completed {
+            color: #198754;
+            border-left: 4px solid #198754;
+        }
+        .document-status .description {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        .tipo-matricula-selector {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .document-upload-section {
+            display: none;
+        }
+        .document-upload-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="upload-container">
+            <h2 class="text-center mb-4">Documentos de Matrícula</h2>
+            
+            <div class="tipo-matricula-selector">
+                <h5>Tipo de Matrícula</h5>
+                <select class="form-select" id="tipoMatricula" onchange="cambiarTipoMatricula()">
+                    <option value="">Seleccione el tipo de matrícula</option>
+                    <option value="nuevo">Alumno Nuevo</option>
+                    <option value="traslado">Traslado</option>
+                    <option value="siguiente">Siguiente Año</option>
+                </select>
+            </div>
+
+            <div id="documentUploadSection" class="document-upload-section">
+                <div class="mb-3">
+                    <label for="matricula_id" class="form-label">ID de Matrícula</label>
+                    <input type="number" class="form-control" id="matricula_id" required>
+                </div>
+
+                <div class="required-documents">
+                    <h5>Documentos Requeridos:</h5>
+                    <div id="documentList"></div>
+                </div>
+
+                <div class="drop-zone" id="dropZone">
+                    <p class="mb-2">Arrastra y suelta archivos aquí</p>
+                    <p class="text-muted small">o</p>
+                    <input type="file" id="fileInput" class="d-none" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif" multiple>
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        Seleccionar Archivos
+                    </button>
+                    <p class="text-muted small mt-2">
+                        Formatos permitidos: PDF, Word, JPG, PNG, GIF<br>
+                        Tamaño máximo por archivo: 5MB
+                    </p>
+                </div>
+
+                <div id="fileList" class="file-list"></div>
+
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-success" id="submitBtn" onclick="subirDocumentos()" disabled>
+                        Subir Documentos
+                    </button>
+                </div>
+
+                <div class="upload-summary">
+                    <h5>Resumen de Documentos Subidos</h5>
+                    <div id="uploadSummary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    
+    <script>
+        const TIPOS_DOCUMENTO_POR_MATRICULA = {
+            nuevo: [
+                { id: 'dni', name: 'DNI del estudiante', description: 'Documento Nacional de Identidad' },
+                { id: 'certificado_nacimiento', name: 'Certificado de Nacimiento', description: 'Partida o certificado de nacimiento original' },
+                { id: 'certificado_estudios', name: 'Certificado de Estudios', description: 'Certificado de estudios previos' },
+                { id: 'fotos', name: 'Fotografías', description: 'Fotos tamaño carnet actualizadas' }
+            ],
+            traslado: [
+                { id: 'dni', name: 'DNI del estudiante', description: 'Documento Nacional de Identidad' },
+                { id: 'certificado_estudios', name: 'Certificado de Estudios', description: 'Certificado de estudios del colegio anterior' },
+                { id: 'constancia_traslado', name: 'Constancia de Traslado', description: 'Constancia de traslado del colegio anterior' },
+                { id: 'certificado_conducta', name: 'Certificado de Conducta', description: 'Certificado de conducta del colegio anterior' }
+            ],
+            siguiente: [
+                { id: 'libreta_notas', name: 'Libreta de Notas', description: 'Libreta de notas del año anterior' },
+                { id: 'comprobante_apafa', name: 'Comprobante APAFA', description: 'Comprobante de pago de APAFA' }
+            ]
+        };
+
+        let selectedFiles = new Map();
+        let uploadedDocuments = new Map();
+        let currentTipoMatricula = '';
+
+        function cambiarTipoMatricula() {
+            const tipoMatricula = document.getElementById('tipoMatricula').value;
+            currentTipoMatricula = tipoMatricula;
+            
+            if (tipoMatricula) {
+                document.getElementById('documentUploadSection').classList.add('active');
+                actualizarListaDocumentos(tipoMatricula);
+                selectedFiles.clear();
+                uploadedDocuments.clear();
+                updateFileList();
+                updateUploadSummary();
+            } else {
+                document.getElementById('documentUploadSection').classList.remove('active');
+            }
+        }
+
+        function actualizarListaDocumentos(tipo) {
+            const documentList = document.getElementById('documentList');
+            const documentos = TIPOS_DOCUMENTO_POR_MATRICULA[tipo];
+            
+            documentList.innerHTML = documentos.map(doc => `
+                <div class="document-status pending" id="status-${doc.id}">
+                    <div>
+                        <i class="bi bi-x-circle"></i>
+                        <strong>${doc.name}</strong>
+                        <div class="description">${doc.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Configuración de Drag and Drop
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            handleFiles(dt.files);
+        }
+
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`El archivo ${file.name} es demasiado grande. Máximo 5MB.`);
+                    return;
+                }
+
+                const allowedTypes = [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif'
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert(`Tipo de archivo no permitido para ${file.name}`);
+                    return;
+                }
+
+                const fileId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                selectedFiles.set(fileId, {
+                    file: file,
+                    type: null
+                });
+            });
+            updateFileList();
+        }
+
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            const documentos = TIPOS_DOCUMENTO_POR_MATRICULA[currentTipoMatricula] || [];
+            
+            let html = '';
+            selectedFiles.forEach((fileData, fileId) => {
+                html += `
+                    <div class="file-item" id="file-${fileId}">
+                        <div class="file-info">
+                            <strong>${fileData.file.name}</strong>
+                            <div class="file-type-select">
+                                <select class="form-select form-select-sm" onchange="updateFileType('${fileId}', this.value)">
+                                    <option value="">Seleccione tipo de documento</option>
+                                    ${documentos.map(doc => `
+                                        <option value="${doc.id}">${doc.name}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeFile('${fileId}')">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            fileList.innerHTML = html;
+            document.getElementById('submitBtn').disabled = selectedFiles.size === 0;
+        }
+
+        function updateFileType(fileId, type) {
+            const fileData = selectedFiles.get(fileId);
+            if (fileData) {
+                fileData.type = type;
+                selectedFiles.set(fileId, fileData);
+            }
+        }
+
+        function removeFile(fileId) {
+            selectedFiles.delete(fileId);
+            updateFileList();
+        }
+
+        function updateDocumentStatus(tipo, status) {
+            const statusElement = document.getElementById(`status-${tipo}`);
+            if (statusElement) {
+                statusElement.className = `document-status ${status}`;
+                const icon = statusElement.querySelector('i');
+                icon.className = `bi bi-${status === 'completed' ? 'check-circle' : 'x-circle'}`;
+            }
+        }
+
+        function updateUploadSummary() {
+            const uploadSummary = document.getElementById('uploadSummary');
+            let summaryHTML = '';
+            
+            uploadedDocuments.forEach((doc, tipo) => {
+                const tipoDoc = TIPOS_DOCUMENTO_POR_MATRICULA[currentTipoMatricula].find(d => d.id === tipo);
+                if (tipoDoc) {
+                    summaryHTML += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <span class="document-type">${tipoDoc.name}:</span> ${doc.nombre}
+                            </div>
+                            <div class="file-actions">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeUploadedDocument('${tipo}')">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            uploadSummary.innerHTML = summaryHTML || '<p class="text-muted">No hay documentos subidos</p>';
+        }
+
+        function removeUploadedDocument(tipo) {
+            uploadedDocuments.delete(tipo);
+            updateUploadSummary();
+            updateDocumentStatus(tipo, 'pending');
+        }
+
+        async function subirDocumentos() {
+            if (selectedFiles.size === 0) {
+                alert('Por favor, seleccione al menos un archivo');
+                return;
+            }
+
+            const matricula_id = document.getElementById('matricula_id').value;
+            if (!matricula_id) {
+                alert('Por favor, ingrese el ID de matrícula');
+                return;
+            }
+
+            let hasError = false;
+            for (const [fileId, fileData] of selectedFiles) {
+                if (!fileData.type) {
+                    alert(`Por favor, seleccione el tipo de documento para ${fileData.file.name}`);
+                    hasError = true;
+                    break;
+                }
+            }
+
+            if (hasError) return;
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Subiendo...';
+
+            let uploadedCount = 0;
+            for (const [fileId, fileData] of selectedFiles) {
+                const formData = new FormData();
+                formData.append('solicitud_id', matricula_id);
+                formData.append('tipo_documento', fileData.type);
+                formData.append('tipo_solicitud', currentTipoMatricula);
+                formData.append('documento', fileData.file);
+                formData.append('nombre_archivo', fileData.file.name);
+                formData.append('ruta_archivo', `/uploads/${fileData.file.name}`);
+
+                try {
+                    const response = await fetch('http://localhost:3000/api/documentos', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        uploadedDocuments.set(fileData.type, {
+                            nombre: fileData.file.name,
+                            id: data.id
+                        });
+                        updateDocumentStatus(fileData.type, 'completed');
+                        uploadedCount++;
+                    } else {
+                        throw new Error(data.message || `Error al subir ${fileData.file.name}`);
+                    }
+                } catch (error) {
+                    alert(`Error al subir ${fileData.file.name}: ${error.message}`);
+                }
+            }
+
+            updateUploadSummary();
+            selectedFiles.clear();
+            updateFileList();
+
+            if (uploadedCount > 0) {
+                alert(`${uploadedCount} documento(s) subido(s) con éxito`);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Subir Documentos';
+        }
+    </script>
+</body>
+</html> 
