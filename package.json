@@ -1,20 +1,28 @@
 {
-  "name": "api-san-pedro",
+  "name": "registro",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Mary0792/api-san-pedro.git"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "api": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "db:seed": "node src/database/seed-data.js",
+    "db:init": "node src/database/init-db.js",
+    "db:reset": "npm run db:init && npm run db:seed"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Mary0792/api-san-pedro/issues"
-  },
-  "homepage": "https://github.com/Mary0792/api-san-pedro#readme",
-  "description": ""
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0",
+    "mssql": "^11.0.1",
+    "multer": "^1.4.5-lts.2",
+    "mysql2": "^3.14.0",
+    "nodemon": "^3.1.9"
+  }
 }
