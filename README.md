@@ -275,7 +275,7 @@ La API está configurada para ejecutarse en el puerto 3000 por defecto, que pued
 
 ## 9. Algo mas
 
-Este es una versión inicial del informe, y se pueden añadir más detalles según sea necesario, así como también más mejoras en áreas clave como:
+Este es una versión inicial del informe, y se pueden añadir más detalles según las mejoras que realicemos o funcionalidades que agreguemos, así como las mejoras en áreas clave que faltan como:
 
 - **Seguridad y autenticación**: Implementación de JWT, roles de usuario, protección contra ataques comunes.
 - **Optimización y Rendimiento**: Implementación de caché, paginación, optimización de consultas SQL.
