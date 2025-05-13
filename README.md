@@ -279,3 +279,21 @@ Este es una versión inicial del informe, y se pueden añadir más detalles seg�
 
 - **Seguridad y autenticación**: Implementación de JWT, roles de usuario, protección contra ataques comunes.
 - **Optimización y Rendimiento**: Implementación de caché, paginación, optimización de consultas SQL.
+
+
+> [!NOTE]
+> ## 🚀 Instalación y Configuración
+> 
+> ```bash
+> # Clonar el repositorio
+> git https://github.com/Mary0792/api-san-pedro.git
+> 
+> # Navegar al directorio del proyecto
+> cd api-san-pedro
+> 
+> # Instalar dependencias
+> npm install
+> 
+> # Iniciar el servidor de desarrollo
+> npm run dev
+> ```
